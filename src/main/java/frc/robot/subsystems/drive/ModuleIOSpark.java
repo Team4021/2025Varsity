@@ -108,7 +108,6 @@ public class ModuleIOSpark implements ModuleIO {
     turnEncoder = turnSpark.getEncoder();
     driveController = driveSpark.getClosedLoopController();
     turnController = turnSpark.getClosedLoopController();
-
     // Configure drive motor
     var driveConfig = new SparkFlexConfig();
     driveConfig
@@ -189,11 +188,13 @@ public class ModuleIOSpark implements ModuleIO {
         turnSpark,
         5,
         () ->
-            turnEncoder.setPosition(Math.asin(canCoder.getAbsolutePosition().getValueAsDouble())));
+            turnEncoder.setPosition(
+                canCoder.getAbsolutePosition().getValueAsDouble() * 2 * Math.PI));
   }
 
   @Override
   public void updateInputs(ModuleIOInputs inputs) {
+
     // Update drive inputs
     sparkStickyFault = false;
     ifOk(driveSpark, driveEncoder::getPosition, (value) -> inputs.drivePositionRad = value);

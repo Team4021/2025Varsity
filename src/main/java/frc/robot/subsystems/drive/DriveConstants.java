@@ -41,23 +41,24 @@ public class DriveConstants {
   public static final Rotation2d backRightZeroRotation = Rotation2d.fromDegrees(0.0);
 
   // Device CAN IDs
+  // ID's taken by looking at robot perspective, looking at the front
   public static final int pigeonCanId = 30;
 
-  public static final int frontLeftDriveCanId = 17;
-  public static final int backLeftDriveCanId = 13;
-  public static final int frontRightDriveCanId = 11;
-  public static final int backRightDriveCanId = 15;
+  public static final int frontLeftDriveCanId = 11;
+  public static final int backLeftDriveCanId = 15;
+  public static final int frontRightDriveCanId = 17;
+  public static final int backRightDriveCanId = 13;
 
-  public static final int frontLeftTurnCanId = 16;
-  public static final int backLeftTurnCanId = 12;
-  public static final int frontRightTurnCanId = 10;
-  public static final int backRightTurnCanId = 14;
+  public static final int frontLeftTurnCanId = 10;
+  public static final int backLeftTurnCanId = 14;
+  public static final int frontRightTurnCanId = 16;
+  public static final int backRightTurnCanId = 12;
 
   // CANCoder CAN IDs
-  public static final int frontLeftTurnEncoderCanId = 26;
-  public static final int backLeftTurnEncoderCanId = 22;
-  public static final int frontRightTurnEncoderCanId = 20;
-  public static final int backRightTurnEncoderCanId = 24;
+  public static final int frontLeftTurnEncoderCanId = 20;
+  public static final int backLeftTurnEncoderCanId = 24;
+  public static final int frontRightTurnEncoderCanId = 26;
+  public static final int backRightTurnEncoderCanId = 22;
 
   // Drive motor configuration
   public static final int driveMotorCurrentLimit = 50;
@@ -89,8 +90,10 @@ public class DriveConstants {
 
   // Turn encoder configuration
   public static final boolean turnEncoderInverted = true;
-  public static final double turnEncoderPositionFactor = 2 * Math.PI; // Rotations -> Radians
-  public static final double turnEncoderVelocityFactor = (2 * Math.PI) / 60.0; // RPM -> Rad/Sec
+  public static final double turnEncoderPositionFactor =
+      2 * Math.PI / turnMotorReduction; // Rotations -> Radians
+  public static final double turnEncoderVelocityFactor =
+      (2 * Math.PI) / 60.0 / turnMotorReduction; // RPM -> Rad/Sec
 
   // Turn PID configuration
   public static final double turnKp = 2.0;
