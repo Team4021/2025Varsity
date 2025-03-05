@@ -14,15 +14,18 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.subsystems.AlgaeSubsystem;
+import frc.robot.subsystems.CoralSubsystem;
+import frc.robot.subsystems.CoralSubsystem.Setpoint;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -39,10 +42,16 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
+
   private final Drive drive;
 
   // Controller
-  private final CommandXboxController controller = new CommandXboxController(0);
+  public static final Joystick leftController = new Joystick(0);
+  public static final Joystick rightController = new Joystick(1);
+  public static final Joystick buttonBox = new Joystick(2);
+
+  private final CoralSubsystem m_coralSubSystem = new CoralSubsystem();
+  private final AlgaeSubsystem m_algaeSubsystem = new AlgaeSubsystem();
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -105,6 +114,9 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+    NamedCommands.registerCommand("Coral Outake", m_coralSubSystem.reverseIntakeCommand());
+    NamedCommands.registerCommand(
+        "Position three", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel3));
   }
 
   /**
@@ -117,34 +129,67 @@ public class RobotContainer {
     // Default command, normal field-relative drive
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
-            drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
+            drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> -Constants.rightX));
 
-    // Lock to 0° when A button is held
-    controller
-        .a()
+    new JoystickButton(buttonBox, 1)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> new Rotation2d()));
-
+                drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> new Rotation2d()));
+    new JoystickButton(buttonBox, 2)
+        .whileTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> new Rotation2d()));
+    new JoystickButton(buttonBox, 3)
+        .whileTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> new Rotation2d()));
+    new JoystickButton(buttonBox, 4)
+        .whileTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> new Rotation2d()));
+    new JoystickButton(buttonBox, 5)
+        .whileTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> new Rotation2d()));
+    new JoystickButton(buttonBox, 6)
+        .whileTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> new Rotation2d()));
+    new JoystickButton(buttonBox, 7)
+        .whileTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> new Rotation2d()));
+    new JoystickButton(buttonBox, 8)
+        .whileTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> new Rotation2d()));
+    new JoystickButton(buttonBox, 9)
+        .whileTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> new Rotation2d()));
     // Switch to X pattern when X button is pressed
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
+    // controlle.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
-    // Reset gyro to 0° when B button is pressed
-    controller
-        .b()
-        .onTrue(
-            Commands.runOnce(
-                    () ->
-                        drive.setPose(
-                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
-                    drive)
-                .ignoringDisable(true));
+    // Left Stick Button -> Set swerve to X
+
+    // Left Bumper -> Run tube intake
+
+    new JoystickButton(rightController, 1).whileTrue(m_coralSubSystem.runIntakeCommand());
+    new JoystickButton(rightController, 2)
+        .whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel2));
+    new JoystickButton(rightController, 3)
+        .whileTrue(
+            m_coralSubSystem
+                .setSetpointCommand(Setpoint.kFeederStation)
+                .alongWith(m_algaeSubsystem.stowCommand()));
+    new JoystickButton(rightController, 5)
+        .whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel3));
+    new JoystickButton(rightController, 4)
+        .whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel4));
+
+    new JoystickButton(leftController, 1).whileTrue(m_coralSubSystem.reverseIntakeCommand());
+    new JoystickButton(leftController, 4).whileTrue(m_algaeSubsystem.reverseIntakeCommand());
+    new JoystickButton(leftController, 5).whileTrue(m_algaeSubsystem.runIntakeCommand());
   }
 
   /**
