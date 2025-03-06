@@ -117,6 +117,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("Coral Outake", m_coralSubSystem.reverseIntakeCommand());
     NamedCommands.registerCommand(
         "Position three", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel3));
+
+    m_algaeSubsystem.setDefaultCommand(m_algaeSubsystem.idleCommand());
   }
 
   /**
@@ -129,44 +131,74 @@ public class RobotContainer {
     // Default command, normal field-relative drive
     drive.setDefaultCommand(
         DriveCommands.joystickDrive(
-            drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> -Constants.rightX));
+            drive,
+            () -> -leftController.getRawAxis(1),
+            () -> leftController.getRawAxis(0),
+            () -> rightController.getRawAxis(0)));
+
+    // Note to self: removed negatives on x axis
 
     new JoystickButton(buttonBox, 1)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
-                drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> new Rotation2d()));
+                drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> new Rotation2d(0)));
     new JoystickButton(buttonBox, 2)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
-                drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> new Rotation2d()));
+                drive,
+                () -> -Constants.leftY,
+                () -> -Constants.leftX,
+                () -> new Rotation2d(-(5 * Math.PI) / 3)));
     new JoystickButton(buttonBox, 3)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
-                drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> new Rotation2d()));
+                drive,
+                () -> -Constants.leftY,
+                () -> -Constants.leftX,
+                () -> new Rotation2d(-(4 * Math.PI) / 3)));
     new JoystickButton(buttonBox, 4)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
-                drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> new Rotation2d()));
+                drive,
+                () -> -Constants.leftY,
+                () -> -Constants.leftX,
+                () -> new Rotation2d(-Math.PI)));
     new JoystickButton(buttonBox, 5)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
-                drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> new Rotation2d()));
+                drive,
+                () -> -Constants.leftY,
+                () -> -Constants.leftX,
+                () -> new Rotation2d(-(2 * Math.PI) / 3)));
     new JoystickButton(buttonBox, 6)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
-                drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> new Rotation2d()));
+                drive,
+                () -> -Constants.leftY,
+                () -> -Constants.leftX,
+                () -> new Rotation2d(-Math.PI / 3)));
     new JoystickButton(buttonBox, 7)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
-                drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> new Rotation2d()));
+                drive,
+                () -> -Constants.leftY,
+                () -> -Constants.leftX,
+                () -> new Rotation2d(-(3 * Math.PI) / 4)));
     new JoystickButton(buttonBox, 8)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
-                drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> new Rotation2d()));
+                drive,
+                () -> -Constants.leftY,
+                () -> -Constants.leftX,
+                () -> new Rotation2d(-(5 * Math.PI) / 4)));
     new JoystickButton(buttonBox, 9)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
-                drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> new Rotation2d()));
+                drive,
+                () -> -Constants.leftY,
+                () -> -Constants.leftX,
+                () -> new Rotation2d(-(3 * Math.PI) / 2)));
+
     // Switch to X pattern when X button is pressed
     // controlle.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
@@ -190,6 +222,21 @@ public class RobotContainer {
     new JoystickButton(leftController, 1).whileTrue(m_coralSubSystem.reverseIntakeCommand());
     new JoystickButton(leftController, 4).whileTrue(m_algaeSubsystem.reverseIntakeCommand());
     new JoystickButton(leftController, 5).whileTrue(m_algaeSubsystem.runIntakeCommand());
+
+    // if (leftController.getRawButton(4)) { // 4 = ?
+    //     // Move the motor forward when the button is pressed
+    //     m_algaeSubsystem.set( -0.3); // Adjust the speed (0.0 to 1.0) as needed
+    // } else {
+    //     // Stop the motor when the button is released
+    //     m_algaeSubsystem.set( 0.0);
+    // }
+    // if (leftController.getRawButton(6)) { // 6 = ?
+    //     // Move the motor forward when the button is pressed
+    //     m_algaeSubsystem.set( 0.3); // Adjust the speed (0.0 to 1.0) as needed
+    // } else {
+    //     // Stop the motor when the button is released
+    //     m_algaeSubsystem.set( 0.0);
+
   }
 
   /**
