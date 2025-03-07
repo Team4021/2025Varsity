@@ -141,63 +141,66 @@ public class RobotContainer {
     new JoystickButton(buttonBox, 1)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
-                drive, () -> -Constants.leftY, () -> -Constants.leftX, () -> new Rotation2d(0)));
+                drive,
+                () -> -leftController.getRawAxis(1),
+                () -> leftController.getRawAxis(0),
+                () -> Rotation2d.fromDegrees(0)));
     new JoystickButton(buttonBox, 2)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
-                () -> -Constants.leftY,
-                () -> -Constants.leftX,
-                () -> new Rotation2d(-(5 * Math.PI) / 3)));
+                () -> -leftController.getRawAxis(1),
+                () -> leftController.getRawAxis(0),
+                () -> Rotation2d.fromDegrees(300)));
     new JoystickButton(buttonBox, 3)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
-                () -> -Constants.leftY,
-                () -> -Constants.leftX,
-                () -> new Rotation2d(-(4 * Math.PI) / 3)));
+                () -> -leftController.getRawAxis(1),
+                () -> leftController.getRawAxis(0),
+                () -> Rotation2d.fromDegrees(240)));
     new JoystickButton(buttonBox, 4)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
-                () -> -Constants.leftY,
-                () -> -Constants.leftX,
-                () -> new Rotation2d(-Math.PI)));
+                () -> -leftController.getRawAxis(1),
+                () -> leftController.getRawAxis(0),
+                () -> Rotation2d.fromDegrees(180)));
     new JoystickButton(buttonBox, 5)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
-                () -> -Constants.leftY,
-                () -> -Constants.leftX,
-                () -> new Rotation2d(-(2 * Math.PI) / 3)));
+                () -> -leftController.getRawAxis(1),
+                () -> leftController.getRawAxis(0),
+                () -> Rotation2d.fromDegrees(-(2 * Math.PI) / 3)));
     new JoystickButton(buttonBox, 6)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
-                () -> -Constants.leftY,
-                () -> -Constants.leftX,
-                () -> new Rotation2d(-Math.PI / 3)));
+                () -> -leftController.getRawAxis(1),
+                () -> leftController.getRawAxis(0),
+                () -> Rotation2d.fromDegrees(120)));
     new JoystickButton(buttonBox, 7)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
-                () -> -Constants.leftY,
-                () -> -Constants.leftX,
-                () -> new Rotation2d(-(3 * Math.PI) / 4)));
+                () -> -leftController.getRawAxis(1),
+                () -> leftController.getRawAxis(0),
+                () -> Rotation2d.fromDegrees(135)));
     new JoystickButton(buttonBox, 8)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
-                () -> -Constants.leftY,
-                () -> -Constants.leftX,
-                () -> new Rotation2d(-(5 * Math.PI) / 4)));
+                () -> -leftController.getRawAxis(1),
+                () -> leftController.getRawAxis(0),
+                () -> Rotation2d.fromDegrees(225)));
     new JoystickButton(buttonBox, 9)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
-                () -> -Constants.leftY,
-                () -> -Constants.leftX,
-                () -> new Rotation2d(-(3 * Math.PI) / 2)));
+                () -> -leftController.getRawAxis(1),
+                () -> leftController.getRawAxis(0),
+                () -> Rotation2d.fromDegrees(270)));
 
     // Switch to X pattern when X button is pressed
     // controlle.x().onTrue(Commands.runOnce(drive::stopWithX, drive));

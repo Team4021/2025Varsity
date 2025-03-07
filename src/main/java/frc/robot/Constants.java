@@ -63,10 +63,6 @@ public final class Constants {
   // processor
   public static final boolean nine = buttonBox.getRawButton(9);
 
-  public static final double leftX = leftController.getRawAxis(0);
-  public static final double leftY = leftController.getRawAxis(1);
-  public static final double rightX = rightController.getRawAxis(0);
-
   // added down
 
   public static final class CoralSubsystemConstants {
