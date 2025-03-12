@@ -24,7 +24,7 @@ public class DriveConstants {
   public static final double maxSpeedMetersPerSec = 4.8;
   public static final double odometryFrequency = 100.0; // Hz
   public static final double trackWidth = Units.inchesToMeters(26.5); // TODO
-  public static final double wheelBase = Units.inchesToMeters(26.5); // TODO
+  public static final double wheelBase = Units.inchesToMeters(27.75); // TODO
   public static final double driveBaseRadius = Math.hypot(trackWidth / 2.0, wheelBase / 2.0);
   public static final Translation2d[] moduleTranslations =
       new Translation2d[] {
@@ -35,30 +35,30 @@ public class DriveConstants {
       };
 
   // Zeroed rotation values for each module, see setup instructions
-  public static final Rotation2d frontLeftZeroRotation = Rotation2d.fromDegrees(0.0);
-  public static final Rotation2d frontRightZeroRotation = Rotation2d.fromDegrees(0.0);
-  public static final Rotation2d backLeftZeroRotation = Rotation2d.fromDegrees(0.0);
-  public static final Rotation2d backRightZeroRotation = Rotation2d.fromDegrees(0.0);
+  public static final Rotation2d frontLeftZeroRotation = new Rotation2d(-0.423);
+  public static final Rotation2d frontRightZeroRotation = new Rotation2d(-1.887);
+  public static final Rotation2d backLeftZeroRotation = new Rotation2d(1.540);
+  public static final Rotation2d backRightZeroRotation = new Rotation2d(0.525);
 
   // Device CAN IDs
   // ID's taken by looking at robot perspective, looking at the front
   public static final int pigeonCanId = 30;
 
-  public static final int frontLeftDriveCanId = 11;
-  public static final int backLeftDriveCanId = 15;
-  public static final int frontRightDriveCanId = 17;
-  public static final int backRightDriveCanId = 13;
+  public static final int frontLeftDriveCanId = 17;
+  public static final int backLeftDriveCanId = 13;
+  public static final int frontRightDriveCanId = 11;
+  public static final int backRightDriveCanId = 15;
 
-  public static final int frontLeftTurnCanId = 10;
-  public static final int backLeftTurnCanId = 14;
-  public static final int frontRightTurnCanId = 16;
-  public static final int backRightTurnCanId = 12;
+  public static final int frontLeftTurnCanId = 16;
+  public static final int backLeftTurnCanId = 12;
+  public static final int frontRightTurnCanId = 10;
+  public static final int backRightTurnCanId = 14;
 
   // CANCoder CAN IDs
-  public static final int frontLeftTurnEncoderCanId = 20;
-  public static final int backLeftTurnEncoderCanId = 24;
-  public static final int frontRightTurnEncoderCanId = 26;
-  public static final int backRightTurnEncoderCanId = 22;
+  public static final int frontLeftTurnEncoderCanId = 26;
+  public static final int backLeftTurnEncoderCanId = 22;
+  public static final int frontRightTurnEncoderCanId = 20;
+  public static final int backRightTurnEncoderCanId = 24;
 
   // Drive motor configuration
   public static final int driveMotorCurrentLimit = 50;

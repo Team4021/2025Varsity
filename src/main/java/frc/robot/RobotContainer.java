@@ -15,6 +15,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -32,6 +33,8 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -118,7 +121,7 @@ public class RobotContainer {
     NamedCommands.registerCommand(
         "Position three", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel3));
 
-    m_algaeSubsystem.setDefaultCommand(m_algaeSubsystem.idleCommand());
+    // m_algaeSubsystem.setDefaultCommand(m_algaeSubsystem.idleCommand());
   }
 
   /**
@@ -129,12 +132,26 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-    drive.setDefaultCommand(
-        DriveCommands.joystickDrive(
-            drive,
-            () -> -leftController.getRawAxis(1),
-            () -> leftController.getRawAxis(0),
-            () -> rightController.getRawAxis(0)));
+    // Drive suppliers
+    DoubleSupplier driverX = () -> leftController.getRawAxis(1);
+    DoubleSupplier driverY = () -> leftController.getRawAxis(0);
+    DoubleSupplier driverOmega =
+        () ->
+            Math.atan2(
+                MathUtil.applyDeadband(-rightController.getRawAxis(1), 0.1),
+                MathUtil.applyDeadband(rightController.getRawAxis(0), 0.1));
+    // Joystick drive command (driver and operator)
+    Supplier<Command> joystickDriveCommandFactory =
+        () ->
+            DriveCommands.joystickDrive(
+                drive,
+                driverX,
+                driverY,
+                driverOmega,
+                () -> {
+                  return false;
+                });
+    drive.setDefaultCommand(joystickDriveCommandFactory.get());
 
     // Note to self: removed negatives on x axis
 
@@ -172,14 +189,14 @@ public class RobotContainer {
                 drive,
                 () -> -leftController.getRawAxis(1),
                 () -> leftController.getRawAxis(0),
-                () -> Rotation2d.fromDegrees(-(2 * Math.PI) / 3)));
+                () -> Rotation2d.fromDegrees(-(240))));
     new JoystickButton(buttonBox, 6)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
                 () -> -leftController.getRawAxis(1),
                 () -> leftController.getRawAxis(0),
-                () -> Rotation2d.fromDegrees(120)));
+                () -> Rotation2d.fromDegrees(300)));
     new JoystickButton(buttonBox, 7)
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
