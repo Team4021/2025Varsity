@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveConstants;
 import java.text.DecimalFormat;
@@ -35,8 +36,8 @@ import org.littletonrobotics.junction.Logger;
 
 public class DriveCommands {
   public static final double DEADBAND = 0.1;
-  private static final double ANGLE_KP = 1.0;
-  private static final double ANGLE_KD = 0.0;
+  private static final double ANGLE_KP = 15.0;
+  private static final double ANGLE_KD = 0.001;
   private static final double ANGLE_MAX_VELOCITY = 8.0;
   private static final double ANGLE_MAX_ACCELERATION = 20.0;
   private static final double FF_START_DELAY = 2.0; // Secs
@@ -73,32 +74,60 @@ public class DriveCommands {
       Drive drive,
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
-      DoubleSupplier omegaSupplier,
+      DoubleSupplier omegaXSupplier,
+      DoubleSupplier omegaYSupplier,
       BooleanSupplier robotRelative) {
+
+    ProfiledPIDController m_steeringPIDController =
+        new ProfiledPIDController(
+            DriveConstants.kTurningP,
+            DriveConstants.kTurningI,
+            DriveConstants.kTurningD,
+            DriveConstants.kTurningControllerConstraints);
     return Commands.run(
         () -> {
-          // Get linear velocity
-          Translation2d linearVelocity =
-              getLinearVelocityFromJoysticks(xSupplier.getAsDouble(), ySupplier.getAsDouble());
+          double xSpeed = xSupplier.getAsDouble();
+          double ySpeed = ySupplier.getAsDouble();
+          double xAngle = omegaXSupplier.getAsDouble();
+          double yAngle = omegaYSupplier.getAsDouble();
+          double modifiedTurn = 0.0;
+          Rotation2d currentRawAngle = drive.getRotation();
+          if (!(Math.abs(xAngle) < OperatorConstants.DEADBAND
+              && Math.abs(yAngle) < OperatorConstants.DEADBAND)) {
+            double currentAngle = Math.abs(currentRawAngle.getDegrees() % 360);
+            if (currentRawAngle.getDegrees() < 0) {
+              currentAngle = 360 - currentAngle;
+            }
 
-          // Calculate angular velocity
-          double omega = getOmegaFromJoysticks(omegaSupplier.getAsDouble());
+            double targetAngle = Math.atan2(yAngle, xAngle);
+            targetAngle = (Math.toDegrees(targetAngle) + 720) % 360;
 
-          ChassisSpeeds speeds =
-              new ChassisSpeeds(
-                  linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
-                  linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
-                  omega * drive.getMaxAngularSpeedRadPerSec());
+            double theta = Math.abs(targetAngle - currentAngle) % 360;
+            double shorterTheta = theta > 180 ? 360 - theta : theta;
+
+            int sign = -1;
+            double angleDelta = currentAngle - targetAngle;
+
+            if (angleDelta >= 0 && angleDelta <= 180) {
+              sign = 1;
+            } else if (angleDelta <= -180 && angleDelta >= -360) {
+              sign = 1;
+            }
+
+            double correctiveAngle = shorterTheta * sign;
+            modifiedTurn = -m_steeringPIDController.calculate(correctiveAngle);
+          }
+
+          // Convert the commanded speeds into the correct units for the drivetrain
+          double xSpeedDelivered = xSpeed * DriveConstants.maxSpeedMetersPerSec;
+          double ySpeedDelivered = ySpeed * DriveConstants.maxSpeedMetersPerSec;
+          double rotDelivered = modifiedTurn * DriveConstants.maxAngularSpeed;
 
           drive.runVelocity(
               robotRelative.getAsBoolean()
-                  ? speeds
-                  : ChassisSpeeds.fromFieldRelativeSpeeds(
-                      speeds,
-                      DriverStation.getAlliance().isPresent()
-                              && DriverStation.getAlliance().get() == Alliance.Red
-                          ? drive.getRotation().plus(new Rotation2d(Math.PI))
-                          : drive.getRotation()));
+                  ? ChassisSpeeds.fromFieldRelativeSpeeds(
+                      xSpeedDelivered, ySpeedDelivered, rotDelivered, currentRawAngle)
+                  : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
         },
         drive);
   }
@@ -133,7 +162,7 @@ public class DriveCommands {
               // Calculate angular speed
               Rotation2d rotation = drive.getRotation();
               double omega =
-                  angleController.calculate(
+                  -angleController.calculate(
                       rotation.getRadians(), rotationSupplier.get().getRadians());
 
               // Convert to field relative speeds & send command

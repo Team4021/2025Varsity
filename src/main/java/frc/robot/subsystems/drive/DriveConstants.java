@@ -18,10 +18,12 @@ import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public class DriveConstants {
-  public static final double maxSpeedMetersPerSec = 4.8;
+  public static final double maxSpeedMetersPerSec = 4.8; // meters per second
+  public static final double maxAngularSpeed = Math.PI * 2.0; // radians per second
   public static final double odometryFrequency = 100.0; // Hz
   public static final double trackWidth = Units.inchesToMeters(26.5); // TODO
   public static final double wheelBase = Units.inchesToMeters(27.75); // TODO
@@ -39,6 +41,13 @@ public class DriveConstants {
   public static final Rotation2d frontRightZeroRotation = new Rotation2d(-1.887);
   public static final Rotation2d backLeftZeroRotation = new Rotation2d(1.540);
   public static final Rotation2d backRightZeroRotation = new Rotation2d(0.525);
+
+  // PID Controller
+  public static final double kTurningP = 0.005;
+  public static final double kTurningI = 0.0;
+  public static final double kTurningD = 0.00025;
+  public static final TrapezoidProfile.Constraints kTurningControllerConstraints =
+      new TrapezoidProfile.Constraints(maxSpeedMetersPerSec, maxAngularSpeed);
 
   // Device CAN IDs
   // ID's taken by looking at robot perspective, looking at the front
@@ -83,13 +92,12 @@ public class DriveConstants {
   public static final double driveSimKv = 0.0789;
 
   // Turn motor configuration
-  public static final boolean turnInverted = false;
+  public static final boolean turnInverted = true;
   public static final int turnMotorCurrentLimit = 20;
   public static final double turnMotorReduction = 150.0 / 7.0;
   public static final DCMotor turnGearbox = DCMotor.getNEO(1);
 
   // Turn encoder configuration
-  public static final boolean turnEncoderInverted = true;
   public static final double turnEncoderPositionFactor =
       2 * Math.PI / turnMotorReduction; // Rotations -> Radians
   public static final double turnEncoderVelocityFactor =

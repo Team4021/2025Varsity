@@ -99,7 +99,7 @@ public final class Constants {
     public static final class ArmSetpoints {
       public static final double kStow = -4.178;
       public static final double kHold = -6.203;
-      public static final double kDown = 0;
+      public static final double kDown = -17.2;
     }
 
     public static final class IntakeSetpoints {
@@ -134,7 +134,7 @@ public final class Constants {
   public static class OperatorConstants {
 
     // Joystick Deadband
-    public static final double DEADBAND = 0.1;
+    public static final double DEADBAND = 0.75;
     public static final double LEFT_Y_DEADBAND = 0.1;
     public static final double RIGHT_X_DEADBAND = 0.1;
     public static final double TURN_CONSTANT = 6;
