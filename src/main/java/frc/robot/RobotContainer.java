@@ -49,8 +49,8 @@ public class RobotContainer {
   private final Drive drive;
 
   // Controller
-  public static final Joystick leftController = new Joystick(0);
-  public static final Joystick rightController = new Joystick(1);
+  public static final Joystick leftController = new Joystick(1);
+  public static final Joystick rightController = new Joystick(0);
   public static final Joystick buttonBox = new Joystick(2);
 
   // Drive suppliers

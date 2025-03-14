@@ -41,8 +41,8 @@ public final class Constants {
   }
 
   // Controller Buttons//Controller buttons
-  public static final Joystick leftController = new Joystick(0);
-  public static final Joystick rightController = new Joystick(1);
+  public static final Joystick leftController = new Joystick(1);
+  public static final Joystick rightController = new Joystick(0);
   public static final Joystick buttonBox = new Joystick(2);
   // Top of reef (from alliance wall)
   public static final boolean one = buttonBox.getRawButton(1);
