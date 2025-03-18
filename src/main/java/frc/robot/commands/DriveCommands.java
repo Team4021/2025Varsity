@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveConstants;
 import java.text.DecimalFormat;
@@ -36,7 +35,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class DriveCommands {
   public static final double DEADBAND = 0.1;
-  private static final double ANGLE_KP = 15.0;
+  private static final double ANGLE_KP = 5.0;
   private static final double ANGLE_KD = 0.001;
   private static final double ANGLE_MAX_VELOCITY = 8.0;
   private static final double ANGLE_MAX_ACCELERATION = 20.0;
@@ -74,60 +73,32 @@ public class DriveCommands {
       Drive drive,
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
-      DoubleSupplier omegaXSupplier,
-      DoubleSupplier omegaYSupplier,
+      DoubleSupplier omegaSupplier,
       BooleanSupplier robotRelative) {
-
-    ProfiledPIDController m_steeringPIDController =
-        new ProfiledPIDController(
-            DriveConstants.kTurningP,
-            DriveConstants.kTurningI,
-            DriveConstants.kTurningD,
-            DriveConstants.kTurningControllerConstraints);
     return Commands.run(
         () -> {
-          double xSpeed = xSupplier.getAsDouble();
-          double ySpeed = ySupplier.getAsDouble();
-          double xAngle = omegaXSupplier.getAsDouble();
-          double yAngle = omegaYSupplier.getAsDouble();
-          double modifiedTurn = 0.0;
-          Rotation2d currentRawAngle = drive.getRotation();
-          if (!(Math.abs(xAngle) < OperatorConstants.DEADBAND
-              && Math.abs(yAngle) < OperatorConstants.DEADBAND)) {
-            double currentAngle = Math.abs(currentRawAngle.getDegrees() % 360);
-            if (currentRawAngle.getDegrees() < 0) {
-              currentAngle = 360 - currentAngle;
-            }
+          // Get linear velocity
+          Translation2d linearVelocity =
+              getLinearVelocityFromJoysticks(xSupplier.getAsDouble(), ySupplier.getAsDouble());
 
-            double targetAngle = Math.atan2(yAngle, xAngle);
-            targetAngle = (Math.toDegrees(targetAngle) + 720) % 360;
+          // Calculate angular velocity
+          double omega = getOmegaFromJoysticks(omegaSupplier.getAsDouble());
 
-            double theta = Math.abs(targetAngle - currentAngle) % 360;
-            double shorterTheta = theta > 180 ? 360 - theta : theta;
-
-            int sign = -1;
-            double angleDelta = currentAngle - targetAngle;
-
-            if (angleDelta >= 0 && angleDelta <= 180) {
-              sign = 1;
-            } else if (angleDelta <= -180 && angleDelta >= -360) {
-              sign = 1;
-            }
-
-            double correctiveAngle = shorterTheta * sign;
-            modifiedTurn = -m_steeringPIDController.calculate(correctiveAngle);
-          }
-
-          // Convert the commanded speeds into the correct units for the drivetrain
-          double xSpeedDelivered = xSpeed * DriveConstants.maxSpeedMetersPerSec;
-          double ySpeedDelivered = ySpeed * DriveConstants.maxSpeedMetersPerSec;
-          double rotDelivered = modifiedTurn * DriveConstants.maxAngularSpeed;
+          ChassisSpeeds speeds =
+              new ChassisSpeeds(
+                  linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
+                  linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+                  omega * drive.getMaxAngularSpeedRadPerSec());
 
           drive.runVelocity(
               robotRelative.getAsBoolean()
-                  ? ChassisSpeeds.fromFieldRelativeSpeeds(
-                      xSpeedDelivered, ySpeedDelivered, rotDelivered, currentRawAngle)
-                  : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
+                  ? speeds
+                  : ChassisSpeeds.fromFieldRelativeSpeeds(
+                      speeds,
+                      DriverStation.getAlliance().isPresent()
+                              && DriverStation.getAlliance().get() == Alliance.Red
+                          ? drive.getRotation().plus(new Rotation2d(Math.PI))
+                          : drive.getRotation()));
         },
         drive);
   }

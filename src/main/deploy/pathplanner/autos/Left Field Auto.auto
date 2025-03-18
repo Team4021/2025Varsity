@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Path #1 for Left Auto"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Position Three"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Position Four"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Coral Outake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Coral Intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Position Feeder Station"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

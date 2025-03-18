@@ -15,6 +15,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -126,8 +127,15 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
     NamedCommands.registerCommand("Coral Outake", m_coralSubSystem.reverseIntakeCommand());
+    NamedCommands.registerCommand("Coral Intake", m_coralSubSystem.runIntakeCommand());
+
     NamedCommands.registerCommand(
-        "Position three", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel3));
+        "Position Feeder Station", m_coralSubSystem.setSetpointCommand(Setpoint.kFeederStation));
+    NamedCommands.registerCommand(
+        "Position Three", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel3));
+
+    NamedCommands.registerCommand(
+        "Position Four", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel4));
 
     m_algaeSubsystem.setDefaultCommand(m_algaeSubsystem.idleCommand());
   }
@@ -246,6 +254,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.get();
+    return new PathPlannerAuto("Joy to world");
   }
 }

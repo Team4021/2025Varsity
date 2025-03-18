@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.696318493150685,
-        "y": 5.512542808219178
+        "x": 5.406454918032787,
+        "y": 5.559426229508197
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.223801369863014,
-        "y": 5.302183219178082
+        "x": 5.3105532786885234,
+        "y": 6.614344262295082
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.6528253424657535,
-        "y": 6.50423801369863
+        "x": 1.4145491803278687,
+        "y": 6.878073770491803
       },
       "prevControl": {
-        "x": 1.697902397260274,
-        "y": 6.143621575342466
+        "x": 2.3495901639344243,
+        "y": 6.614344262295082
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,7 +31,20 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Coral Outake",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Position Feeder Station",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
@@ -42,13 +55,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -65.37643521383632
+    "rotation": 126.46923439005192
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -59.03624346792648
+    "rotation": -120.14138555207515
   },
   "useDefaultConstraints": true
 }
