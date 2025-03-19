@@ -133,7 +133,7 @@ public class DriveCommands {
               // Calculate angular speed
               Rotation2d rotation = drive.getRotation();
               double omega =
-                  -angleController.calculate(
+                  angleController.calculate(
                       rotation.getRadians(), rotationSupplier.get().getRadians());
 
               // Convert to field relative speeds & send command

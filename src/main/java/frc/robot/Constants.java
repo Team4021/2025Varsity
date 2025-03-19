@@ -13,11 +13,9 @@
 
 package frc.robot;
 
-// import org.littletonrobotics.conduit.schema.Joystick;
-
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Joystick;
-// import swervelib.math.Matter;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -39,6 +37,10 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
+
+  // To the future programmer seeing this: Don't put mutable variables in constants!!!
+  // This is very bad practice!!
+  public static Rotation2d lastValidTargetAngle = Rotation2d.fromDegrees(0);
 
   // Controller Buttons//Controller buttons
   public static final Joystick leftController = new Joystick(1);
@@ -79,11 +81,11 @@ public final class Constants {
     }
 
     public static final class ArmSetpoints {
-      public static final double kFeederStation = -33;
-      public static final double kLevel1 = 0;
-      public static final double kLevel2 = -2;
-      public static final double kLevel3 = -2;
-      public static final double kLevel4 = -19;
+      public static final double kFeederStation = -12.33;
+      public static final double kLevel1 = -44.855;
+      public static final double kLevel2 = -44.855;
+      public static final double kLevel3 = -44.855;
+      public static final double kLevel4 = -44.855;
     }
 
     public static final class IntakeSetpoints {

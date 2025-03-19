@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.OperatorConstants;
@@ -55,15 +56,13 @@ public class RobotContainer {
   public static final Joystick buttonBox = new Joystick(2);
 
   // Drive suppliers
-  DoubleSupplier driverX = () -> leftController.getRawAxis(1); // Y-axis joystick
+  DoubleSupplier driverX = () -> -leftController.getRawAxis(1); // Y-axis joystick
   DoubleSupplier driverY = () -> leftController.getRawAxis(0); // X-axis joystick
   DoubleSupplier angleX = () -> rightController.getRawAxis(0); // X-axis joystick
   DoubleSupplier angleY = () -> -rightController.getRawAxis(1); // Y-axis joystick
 
   private final CoralSubsystem m_coralSubSystem = new CoralSubsystem();
   private final AlgaeSubsystem m_algaeSubsystem = new AlgaeSubsystem();
-
-  private double lastValidTargetAngle = Math.PI / 2.0;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -158,41 +157,70 @@ public class RobotContainer {
     // Note to self: removed negatives on x axis
 
     new JoystickButton(buttonBox, 1)
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive, driverX, driverY, () -> Rotation2d.fromDegrees(0)));
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  Constants.lastValidTargetAngle = Rotation2d.fromDegrees(0);
+                },
+                drive));
     new JoystickButton(buttonBox, 2)
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive, driverX, driverY, () -> Rotation2d.fromDegrees(300)));
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  Constants.lastValidTargetAngle = Rotation2d.fromDegrees(300);
+                },
+                drive));
+    // DriveCommands.joystickDriveAtAngle(
+    //     drive, driverX, driverY, () -> Rotation2d.fromDegrees(300)));
     new JoystickButton(buttonBox, 3)
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive, driverX, driverY, () -> Rotation2d.fromDegrees(240)));
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  Constants.lastValidTargetAngle = Rotation2d.fromDegrees(240);
+                },
+                drive));
     new JoystickButton(buttonBox, 4)
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive, driverX, driverY, () -> Rotation2d.fromDegrees(180)));
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  Constants.lastValidTargetAngle = Rotation2d.fromDegrees(180);
+                },
+                drive));
     new JoystickButton(buttonBox, 5)
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive, driverX, driverY, () -> Rotation2d.fromDegrees(-(240))));
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  Constants.lastValidTargetAngle = Rotation2d.fromDegrees(120);
+                },
+                drive));
     new JoystickButton(buttonBox, 6)
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive, driverX, driverY, () -> Rotation2d.fromDegrees(300)));
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  Constants.lastValidTargetAngle = Rotation2d.fromDegrees(60);
+                },
+                drive));
     new JoystickButton(buttonBox, 7)
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive, driverX, driverY, () -> Rotation2d.fromDegrees(135)));
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  Constants.lastValidTargetAngle = Rotation2d.fromDegrees(135);
+                },
+                drive));
     new JoystickButton(buttonBox, 8)
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive, driverX, driverY, () -> Rotation2d.fromDegrees(225)));
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  Constants.lastValidTargetAngle = Rotation2d.fromDegrees(225);
+                },
+                drive));
     new JoystickButton(buttonBox, 9)
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive, driverX, driverY, () -> Rotation2d.fromDegrees(270)));
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  Constants.lastValidTargetAngle = Rotation2d.fromDegrees(270);
+                },
+                drive));
 
     // Switch to X pattern when X button is pressed
     // controlle.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
@@ -237,15 +265,12 @@ public class RobotContainer {
   private Rotation2d getTargetAngleFromJoystick() {
     double xAngle = angleX.getAsDouble();
     double yAngle = angleY.getAsDouble();
-    double targetAngle = 0.0;
-    if (Math.abs(xAngle) < OperatorConstants.DEADBAND
-        && Math.abs(yAngle) < OperatorConstants.DEADBAND) {
-      targetAngle = lastValidTargetAngle;
-    } else {
-      targetAngle = Math.atan2(yAngle, xAngle);
-      lastValidTargetAngle = targetAngle;
+    if (Math.abs(xAngle) >= OperatorConstants.DEADBAND
+        || Math.abs(yAngle) >= OperatorConstants.DEADBAND) {
+      Rotation2d targetAngle = Rotation2d.fromRadians(Math.atan2(yAngle, xAngle));
+      Constants.lastValidTargetAngle = targetAngle.minus(Rotation2d.fromDegrees(90));
     }
-    return Rotation2d.fromRadians(targetAngle).minus(Rotation2d.fromDegrees(90));
+    return Constants.lastValidTargetAngle;
   }
 
   /**
