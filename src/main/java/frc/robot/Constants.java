@@ -13,11 +13,9 @@
 
 package frc.robot;
 
-// import org.littletonrobotics.conduit.schema.Joystick;
-
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Joystick;
-// import swervelib.math.Matter;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -40,9 +38,13 @@ public final class Constants {
     REPLAY
   }
 
+  // To the future programmer seeing this: Don't put mutable variables in constants!!!
+  // This is very bad practice!!
+  public static Rotation2d lastValidTargetAngle = Rotation2d.fromDegrees(0);
+
   // Controller Buttons//Controller buttons
-  public static final Joystick leftController = new Joystick(0);
-  public static final Joystick rightController = new Joystick(1);
+  public static final Joystick leftController = new Joystick(1);
+  public static final Joystick rightController = new Joystick(0);
   public static final Joystick buttonBox = new Joystick(2);
   // Top of reef (from alliance wall)
   public static final boolean one = buttonBox.getRawButton(1);
@@ -63,10 +65,6 @@ public final class Constants {
   // processor
   public static final boolean nine = buttonBox.getRawButton(9);
 
-  public static final double leftX = leftController.getRawAxis(0);
-  public static final double leftY = leftController.getRawAxis(1);
-  public static final double rightX = rightController.getRawAxis(0);
-
   // added down
 
   public static final class CoralSubsystemConstants {
@@ -78,16 +76,16 @@ public final class Constants {
       public static final int kFeederStation = 0;
       public static final int kLevel1 = 0;
       public static final int kLevel2 = 0;
-      public static final int kLevel3 = 100;
-      public static final int kLevel4 = 150;
+      public static final int kLevel3 = 109;
+      public static final int kLevel4 = 109;
     }
 
     public static final class ArmSetpoints {
-      public static final double kFeederStation = -33;
-      public static final double kLevel1 = 0;
-      public static final double kLevel2 = -2;
-      public static final double kLevel3 = -2;
-      public static final double kLevel4 = -19;
+      public static final double kFeederStation = -12.33;
+      public static final double kLevel1 = -45;
+      public static final double kLevel2 = -45;
+      public static final double kLevel3 = -45;
+      public static final double kLevel4 = -45;
     }
 
     public static final class IntakeSetpoints {
@@ -103,7 +101,7 @@ public final class Constants {
     public static final class ArmSetpoints {
       public static final double kStow = -4.178;
       public static final double kHold = -6.203;
-      public static final double kDown = 0;
+      public static final double kDown = -17.2;
     }
 
     public static final class IntakeSetpoints {
@@ -138,7 +136,7 @@ public final class Constants {
   public static class OperatorConstants {
 
     // Joystick Deadband
-    public static final double DEADBAND = 0.1;
+    public static final double DEADBAND = 0.75;
     public static final double LEFT_Y_DEADBAND = 0.1;
     public static final double RIGHT_X_DEADBAND = 0.1;
     public static final double TURN_CONSTANT = 6;

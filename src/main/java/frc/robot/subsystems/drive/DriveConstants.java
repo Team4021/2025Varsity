@@ -18,13 +18,15 @@ import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 public class DriveConstants {
-  public static final double maxSpeedMetersPerSec = 4.8;
+  public static final double maxSpeedMetersPerSec = 4.8; // meters per second
+  public static final double maxAngularSpeed = Math.PI * 2.0; // radians per second
   public static final double odometryFrequency = 100.0; // Hz
-  public static final double trackWidth = Units.inchesToMeters(26.5); // TODO
-  public static final double wheelBase = Units.inchesToMeters(26.5); // TODO
+  public static final double trackWidth = Units.inchesToMeters(26.5);
+  public static final double wheelBase = Units.inchesToMeters(27.75);
   public static final double driveBaseRadius = Math.hypot(trackWidth / 2.0, wheelBase / 2.0);
   public static final Translation2d[] moduleTranslations =
       new Translation2d[] {
@@ -35,34 +37,42 @@ public class DriveConstants {
       };
 
   // Zeroed rotation values for each module, see setup instructions
-  public static final Rotation2d frontLeftZeroRotation = Rotation2d.fromDegrees(0.0);
-  public static final Rotation2d frontRightZeroRotation = Rotation2d.fromDegrees(0.0);
-  public static final Rotation2d backLeftZeroRotation = Rotation2d.fromDegrees(0.0);
-  public static final Rotation2d backRightZeroRotation = Rotation2d.fromDegrees(0.0);
+  public static final Rotation2d frontLeftZeroRotation = new Rotation2d(2.729);
+  public static final Rotation2d frontRightZeroRotation = new Rotation2d(1.238);
+  public static final Rotation2d backLeftZeroRotation = new Rotation2d(-1.600);
+  public static final Rotation2d backRightZeroRotation = new Rotation2d(-2.586);
+
+  // PID Controller
+  public static final double kTurningP = 0.005;
+  public static final double kTurningI = 0.0;
+  public static final double kTurningD = 0.00025;
+  public static final TrapezoidProfile.Constraints kTurningControllerConstraints =
+      new TrapezoidProfile.Constraints(maxSpeedMetersPerSec, maxAngularSpeed);
 
   // Device CAN IDs
   // ID's taken by looking at robot perspective, looking at the front
   public static final int pigeonCanId = 30;
 
-  public static final int frontLeftDriveCanId = 11;
-  public static final int backLeftDriveCanId = 15;
-  public static final int frontRightDriveCanId = 17;
-  public static final int backRightDriveCanId = 13;
+  public static final int frontLeftDriveCanId = 17;
+  public static final int backLeftDriveCanId = 13;
+  public static final int frontRightDriveCanId = 11;
+  public static final int backRightDriveCanId = 15;
 
-  public static final int frontLeftTurnCanId = 10;
-  public static final int backLeftTurnCanId = 14;
-  public static final int frontRightTurnCanId = 16;
-  public static final int backRightTurnCanId = 12;
+  public static final int frontLeftTurnCanId = 16;
+  public static final int backLeftTurnCanId = 12;
+  public static final int frontRightTurnCanId = 10;
+  public static final int backRightTurnCanId = 14;
 
   // CANCoder CAN IDs
-  public static final int frontLeftTurnEncoderCanId = 20;
-  public static final int backLeftTurnEncoderCanId = 24;
-  public static final int frontRightTurnEncoderCanId = 26;
-  public static final int backRightTurnEncoderCanId = 22;
+  public static final int frontLeftTurnEncoderCanId = 26;
+  public static final int backLeftTurnEncoderCanId = 22;
+  public static final int frontRightTurnEncoderCanId = 20;
+  public static final int backRightTurnEncoderCanId = 24;
 
   // Drive motor configuration
+  public static final boolean driveInverted = false;
   public static final int driveMotorCurrentLimit = 50;
-  public static final double wheelRadiusMeters = Units.inchesToMeters(4);
+  public static final double wheelRadiusMeters = Units.inchesToMeters(2);
   public static final double driveMotorReduction = 6.75; // L2
   public static final DCMotor driveGearbox = DCMotor.getNEO(1);
 
@@ -83,13 +93,12 @@ public class DriveConstants {
   public static final double driveSimKv = 0.0789;
 
   // Turn motor configuration
-  public static final boolean turnInverted = false;
+  public static final boolean turnInverted = true;
   public static final int turnMotorCurrentLimit = 20;
   public static final double turnMotorReduction = 150.0 / 7.0;
   public static final DCMotor turnGearbox = DCMotor.getNEO(1);
 
   // Turn encoder configuration
-  public static final boolean turnEncoderInverted = true;
   public static final double turnEncoderPositionFactor =
       2 * Math.PI / turnMotorReduction; // Rotations -> Radians
   public static final double turnEncoderVelocityFactor =

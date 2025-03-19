@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.sim.SparkFlexSim;
 import com.revrobotics.sim.SparkLimitSwitchSim;
-import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -41,8 +40,8 @@ public class CoralSubsystem extends SubsystemBase {
 
   // Initialize arm SPARK. We will use MAXMotion position control for the arm, so we also need to
   // initialize the closed loop controller and encoder.
-  private SparkMax armMotor =
-      new SparkMax(CoralSubsystemConstants.kArmMotorCanId, MotorType.kBrushless);
+  private SparkFlex armMotor =
+      new SparkFlex(CoralSubsystemConstants.kArmMotorCanId, MotorType.kBrushless);
   private SparkClosedLoopController armController = armMotor.getClosedLoopController();
   private RelativeEncoder armEncoder = armMotor.getEncoder();
 
@@ -83,7 +82,7 @@ public class CoralSubsystem extends SubsystemBase {
           0.0);
 
   private DCMotor armMotorModel = DCMotor.getNEO(1);
-  private SparkMaxSim armMotorSim;
+  private SparkFlexSim armMotorSim;
   private final SingleJointedArmSim m_armSim =
       new SingleJointedArmSim(
           armMotorModel,
@@ -149,7 +148,7 @@ public class CoralSubsystem extends SubsystemBase {
     // Initialize simulation values
     elevatorMotorSim = new SparkFlexSim(elevatorMotor, elevatorMotorModel);
     elevatorLimitSwitchSim = new SparkLimitSwitchSim(elevatorMotor, false);
-    armMotorSim = new SparkMaxSim(armMotor, armMotorModel);
+    armMotorSim = new SparkFlexSim(armMotor, armMotorModel);
   }
 
   /**
