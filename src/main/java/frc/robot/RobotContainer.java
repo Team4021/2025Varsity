@@ -13,6 +13,8 @@
 
 package frc.robot;
 
+import static frc.robot.subsystems.vision.VisionConstants.*;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -33,6 +35,9 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
 import frc.robot.subsystems.vision.LimelightSubsystem;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOLimelight;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -43,7 +48,7 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
-
+  private final Vision vision;
   private final Drive drive;
 
   // Controller
@@ -60,6 +65,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
@@ -70,6 +76,11 @@ public class RobotContainer {
                 new ModuleIOSpark(1),
                 new ModuleIOSpark(2),
                 new ModuleIOSpark(3));
+
+        vision =
+            new Vision(
+                drive::addVisionMeasurement,
+                new VisionIOLimelight(coralReefCam, drive::getRotation));
         break;
 
       case SIM:
@@ -92,6 +103,8 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
+
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         break;
     }
 
