@@ -57,7 +57,7 @@ public class RobotContainer {
 
   // Drive suppliers
   DoubleSupplier driverX = () -> -leftController.getRawAxis(1); // Y-axis joystick
-  DoubleSupplier driverY = () -> leftController.getRawAxis(0); // X-axis joystick
+  DoubleSupplier driverY = () -> -leftController.getRawAxis(0); // X-axis joystick
   DoubleSupplier angleX = () -> rightController.getRawAxis(0); // X-axis joystick
   DoubleSupplier angleY = () -> -rightController.getRawAxis(1); // Y-axis joystick
 

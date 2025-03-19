@@ -37,10 +37,10 @@ public class DriveConstants {
       };
 
   // Zeroed rotation values for each module, see setup instructions
-  public static final Rotation2d frontLeftZeroRotation = new Rotation2d(-0.423);
-  public static final Rotation2d frontRightZeroRotation = new Rotation2d(-1.887);
-  public static final Rotation2d backLeftZeroRotation = new Rotation2d(1.540);
-  public static final Rotation2d backRightZeroRotation = new Rotation2d(0.525);
+  public static final Rotation2d frontLeftZeroRotation = new Rotation2d(2.729);
+  public static final Rotation2d frontRightZeroRotation = new Rotation2d(1.238);
+  public static final Rotation2d backLeftZeroRotation = new Rotation2d(-1.600);
+  public static final Rotation2d backRightZeroRotation = new Rotation2d(-2.586);
 
   // PID Controller
   public static final double kTurningP = 0.005;
@@ -70,7 +70,7 @@ public class DriveConstants {
   public static final int backRightTurnEncoderCanId = 24;
 
   // Drive motor configuration
-  public static final boolean driveInverted = true;
+  public static final boolean driveInverted = false;
   public static final int driveMotorCurrentLimit = 50;
   public static final double wheelRadiusMeters = Units.inchesToMeters(2);
   public static final double driveMotorReduction = 6.75; // L2
