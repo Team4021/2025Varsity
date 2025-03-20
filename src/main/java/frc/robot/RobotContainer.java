@@ -18,17 +18,18 @@ import static frc.robot.subsystems.vision.VisionConstants.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.leftCoralReefTrack;
 import frc.robot.subsystems.AlgaeSubsystem;
 import frc.robot.subsystems.CoralSubsystem;
 import frc.robot.subsystems.CoralSubsystem.Setpoint;
@@ -38,12 +39,12 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
-import java.util.function.DoubleSupplier;
-import java.util.function.Supplier;
 import frc.robot.subsystems.vision.LimelightSubsystem;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -54,8 +55,8 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
-  private final Vision vision;
   private final Drive drive;
+  private final Vision vision;
 
   // Controller
   public static final Joystick leftController = new Joystick(1);
@@ -170,6 +171,14 @@ public class RobotContainer {
                 drive, driverX, driverY, this::getTargetAngleFromJoystick);
     drive.setDefaultCommand(joystickDriveCommandFactory.get());
 
+    new JoystickButton(buttonBox, 10) 
+        .onTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive, driverX, driverY, () -> Constants.lastValidTargetAngle))
+        .whileTrue(
+            new leftCoralReefTrack(vision));
+    
+                
     // Note to self: removed negatives on x axis
 
     new JoystickButton(buttonBox, 1)
@@ -238,13 +247,6 @@ public class RobotContainer {
                 },
                 drive));
 
-    // Switch to X pattern when X button is pressed
-    // controlle.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-
-    // Left Stick Button -> Set swerve to X
-
-    // Left Bumper -> Run tube intake
-
     new JoystickButton(rightController, 1).whileTrue(m_coralSubSystem.runIntakeCommand());
     new JoystickButton(rightController, 2)
         .whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel2));
@@ -261,21 +263,6 @@ public class RobotContainer {
     new JoystickButton(leftController, 1).whileTrue(m_coralSubSystem.reverseIntakeCommand());
     new JoystickButton(leftController, 4).whileTrue(m_algaeSubsystem.reverseIntakeCommand());
     new JoystickButton(leftController, 5).whileTrue(m_algaeSubsystem.runIntakeCommand());
-
-    // if (leftController.getRawButton(4)) { // 4 = ?
-    //     // Move the motor forward when the button is pressed
-    //     m_algaeSubsystem.set( -0.3); // Adjust the speed (0.0 to 1.0) as needed
-    // } else {
-    //     // Stop the motor when the button is released
-    //     m_algaeSubsystem.set( 0.0);
-    // }
-    // if (leftController.getRawButton(6)) { // 6 = ?
-    //     // Move the motor forward when the button is pressed
-    //     m_algaeSubsystem.set( 0.3); // Adjust the speed (0.0 to 1.0) as needed
-    // } else {
-    //     // Stop the motor when the button is released
-    //     m_algaeSubsystem.set( 0.0);
-
   }
 
   private Rotation2d getTargetAngleFromJoystick() {

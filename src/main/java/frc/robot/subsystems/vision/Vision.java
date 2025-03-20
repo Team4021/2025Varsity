@@ -17,11 +17,14 @@ import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -31,12 +34,23 @@ import java.util.List;
 import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
+  NetworkTable coralOffset;
   private final VisionConsumer consumer;
   private final VisionIO[] io;
   private final VisionIOInputsAutoLogged[] inputs;
   private final Alert[] disconnectedAlerts;
 
+  public double calculatecoralOffsetX;
+
+  public PIDController coralOffsetPID =
+      new PIDController(
+          VisionConstants.CoralOffsetConstants.kP,
+          VisionConstants.AlignmentConstants.kI,
+          VisionConstants.AlignmentConstants.kD);
+
   public Vision(VisionConsumer consumer, VisionIO... io) {
+    coralOffset = NetworkTableInstance.getDefault().getTable("rightReefVision");
+
     this.consumer = consumer;
     this.io = io;
 
@@ -62,6 +76,22 @@ public class Vision extends SubsystemBase {
    */
   public Rotation2d getTargetX(int cameraIndex) {
     return inputs[cameraIndex].latestTargetObservation.tx();
+  }
+
+  public double coralOffsetX() {
+    return coralOffset.getEntry("tx").getDouble(0);
+  }
+
+  public double calculateLeftCoralOffsetX() {
+    return calculatecoralOffsetX =
+        coralOffsetPID.calculate(
+            coralOffsetX(), VisionConstants.CoralOffsetConstants.leftReefSetpoint);
+  }
+
+  public double calculateRightCoralOffsetX() {
+    return calculatecoralOffsetX =
+        coralOffsetPID.calculate(
+            coralOffsetX(), VisionConstants.CoralOffsetConstants.rightReefSetpoint);
   }
 
   @Override

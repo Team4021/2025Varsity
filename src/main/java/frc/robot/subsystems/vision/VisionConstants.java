@@ -51,4 +51,20 @@ public class VisionConstants {
   public static double linearStdDevMegatag2Factor = 0.5; // More stable than full 3D solve
   public static double angularStdDevMegatag2Factor =
       Double.POSITIVE_INFINITY; // No rotation data available
+
+  public static final class AlignmentConstants {
+    public static final double kP = .01;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static double aprilTagAlignmentX = 0;
+    public static double aprilTagAlignmentY = 0;
+  }
+
+  public static final class CoralOffsetConstants {
+    public static final double kP = .01;
+    public static final double kI = 0;
+    public static final double kD = 0;
+    public static double leftReefSetpoint = 0.0;
+    public static double rightReefSetpoint = 0.0;
+  }
 }

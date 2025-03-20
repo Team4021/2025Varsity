@@ -40,6 +40,7 @@ public final class Constants {
 
   // To the future programmer seeing this: Don't put mutable variables in constants!!!
   // This is very bad practice!!
+  //Oops! I made 2 more!!
   public static Rotation2d lastValidTargetAngle = Rotation2d.fromDegrees(0);
 
   // Controller Buttons//Controller buttons
