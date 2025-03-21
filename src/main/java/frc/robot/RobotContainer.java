@@ -15,7 +15,6 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -124,7 +123,7 @@ public class RobotContainer {
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
     // Configure the button bindings
-    configureButtonBindings();
+
     NamedCommands.registerCommand("Coral Outake", m_coralSubSystem.reverseIntakeCommand());
     NamedCommands.registerCommand("Coral Intake", m_coralSubSystem.runIntakeCommand());
 
@@ -134,7 +133,16 @@ public class RobotContainer {
         "Position Three", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel3));
 
     NamedCommands.registerCommand(
-        "Position Four", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel4));
+        "Algae Clear",
+        m_coralSubSystem.setSetpointCommand(
+            Setpoint.kAlgaeClear)); // changed from level four, may change for Iowa
+
+    NamedCommands.registerCommand(
+        "Position Two", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel2));
+    NamedCommands.registerCommand(
+        "Position Trough", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel1));
+
+    configureButtonBindings();
 
     m_algaeSubsystem.setDefaultCommand(m_algaeSubsystem.idleCommand());
   }
@@ -204,14 +212,14 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  Constants.lastValidTargetAngle = Rotation2d.fromDegrees(135);
+                  Constants.lastValidTargetAngle = Rotation2d.fromDegrees(125);
                 },
                 drive));
     new JoystickButton(buttonBox, 8)
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  Constants.lastValidTargetAngle = Rotation2d.fromDegrees(225);
+                  Constants.lastValidTargetAngle = Rotation2d.fromDegrees(205);
                 },
                 drive));
     new JoystickButton(buttonBox, 9)
@@ -235,12 +243,23 @@ public class RobotContainer {
     new JoystickButton(rightController, 3)
         .whileTrue(
             m_coralSubSystem
-                .setSetpointCommand(Setpoint.kFeederStation)
+                .setSetpointCommand(Setpoint.kLevel3)
                 .alongWith(m_algaeSubsystem.stowCommand()));
     new JoystickButton(rightController, 5)
-        .whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel3));
-    new JoystickButton(rightController, 4)
-        .whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel4));
+        .whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kFeederStation));
+
+    // new JoystickButton(rightController, 2)
+    // .whileTrue(
+    //     m_coralSubSystem.setSetpointCommand(
+    //         Setpoint.kAlgaeClear));
+
+    new JoystickButton(leftController, 2)
+        .whileTrue(
+            m_coralSubSystem.setSetpointCommand(
+                Setpoint.kAlgaeClear)); // used to be level four, may change for Iowa
+
+    new JoystickButton(leftController, 3)
+        .whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kAlgaeClear2));
 
     new JoystickButton(leftController, 1).whileTrue(m_coralSubSystem.reverseIntakeCommand());
     new JoystickButton(leftController, 4).whileTrue(m_algaeSubsystem.reverseIntakeCommand());
@@ -279,6 +298,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new PathPlannerAuto("Joy to world");
+    return autoChooser.get();
   }
 }

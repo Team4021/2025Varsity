@@ -76,8 +76,8 @@ public final class Constants {
       public static final int kFeederStation = 0;
       public static final int kLevel1 = 0;
       public static final int kLevel2 = 0;
-      public static final int kLevel3 = 109;
-      public static final int kLevel4 = 109;
+      public static final int kLevel3 = 100;
+      public static final int kLevel4 = 100;
     }
 
     public static final class ArmSetpoints {
@@ -86,6 +86,7 @@ public final class Constants {
       public static final double kLevel2 = -45;
       public static final double kLevel3 = -45;
       public static final double kLevel4 = -45;
+      public static final double kAlgaeClear = -30;
     }
 
     public static final class IntakeSetpoints {

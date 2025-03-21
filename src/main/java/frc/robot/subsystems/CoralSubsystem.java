@@ -35,7 +35,9 @@ public class CoralSubsystem extends SubsystemBase {
     kLevel1,
     kLevel2,
     kLevel3,
-    kLevel4;
+    kLevel4,
+    kAlgaeClear,
+    kAlgaeClear2;
   }
 
   // Initialize arm SPARK. We will use MAXMotion position control for the arm, so we also need to
@@ -219,6 +221,16 @@ public class CoralSubsystem extends SubsystemBase {
             case kLevel4:
               armCurrentTarget = ArmSetpoints.kLevel4;
               elevatorCurrentTarget = ElevatorSetpoints.kLevel4;
+              break;
+
+            case kAlgaeClear:
+              armCurrentTarget = ArmSetpoints.kAlgaeClear;
+              elevatorCurrentTarget = ElevatorSetpoints.kLevel2;
+              break;
+
+            case kAlgaeClear2:
+              armCurrentTarget = ArmSetpoints.kAlgaeClear;
+              elevatorCurrentTarget = ElevatorSetpoints.kLevel3;
               break;
           }
         });
