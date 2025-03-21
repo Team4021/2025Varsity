@@ -34,22 +34,22 @@ import java.util.List;
 import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
-  NetworkTable coralOffset;
+  NetworkTable algaeOffset;
   private final VisionConsumer consumer;
   private final VisionIO[] io;
   private final VisionIOInputsAutoLogged[] inputs;
   private final Alert[] disconnectedAlerts;
 
-  public double calculatecoralOffsetX;
+  public double calculatealgaeOffsetX;
 
-  public PIDController coralOffsetPID =
+  public PIDController algaeOffsetPID =
       new PIDController(
-          VisionConstants.CoralOffsetConstants.kP,
+          VisionConstants.AlgaeOffsetConstants.kP,
           VisionConstants.AlignmentConstants.kI,
           VisionConstants.AlignmentConstants.kD);
 
   public Vision(VisionConsumer consumer, VisionIO... io) {
-    coralOffset = NetworkTableInstance.getDefault().getTable("rightReefVision");
+    NetworkTable algaeOffset = NetworkTableInstance.getDefault().getTable("rightReefVision");
 
     this.consumer = consumer;
     this.io = io;
@@ -78,20 +78,14 @@ public class Vision extends SubsystemBase {
     return inputs[cameraIndex].latestTargetObservation.tx();
   }
 
-  public double coralOffsetX() {
-    return coralOffset.getEntry("tx").getDouble(0);
+  public double algaeOffsetX() {
+    return algaeOffset.getEntry("tx").getDouble(0);
   }
 
-  public double calculateLeftCoralOffsetX() {
-    return calculatecoralOffsetX =
-        coralOffsetPID.calculate(
-            coralOffsetX(), VisionConstants.CoralOffsetConstants.leftReefSetpoint);
-  }
-
-  public double calculateRightCoralOffsetX() {
-    return calculatecoralOffsetX =
-        coralOffsetPID.calculate(
-            coralOffsetX(), VisionConstants.CoralOffsetConstants.rightReefSetpoint);
+  public double calculatealgaeOffsetX() {
+    return calculatealgaeOffsetX =
+        algaeOffsetPID.calculate(
+            algaeOffsetX(), VisionConstants.AlgaeOffsetConstants.rightReefSetpoint);
   }
 
   @Override

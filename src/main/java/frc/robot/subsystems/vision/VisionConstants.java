@@ -60,7 +60,7 @@ public class VisionConstants {
     public static double aprilTagAlignmentY = 0;
   }
 
-  public static final class CoralOffsetConstants {
+  public static final class AlgaeOffsetConstants {
     public static final double kP = .01;
     public static final double kI = 0;
     public static final double kD = 0;

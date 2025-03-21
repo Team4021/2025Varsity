@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.OperatorConstants;
@@ -69,7 +68,7 @@ public class RobotContainer {
 
   private final CoralSubsystem m_coralSubSystem = new CoralSubsystem();
   private final AlgaeSubsystem m_algaeSubsystem = new AlgaeSubsystem();
-  
+
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -102,8 +101,8 @@ public class RobotContainer {
                 new ModuleIOSim(),
                 new ModuleIOSim(),
                 new ModuleIOSim());
-               
-         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
+
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
 
         break;
 
@@ -180,14 +179,12 @@ public class RobotContainer {
                 drive, driverX, driverY, this::getTargetAngleFromJoystick);
     drive.setDefaultCommand(joystickDriveCommandFactory.get());
 
-    new JoystickButton(buttonBox, 10) 
+    new JoystickButton(buttonBox, 10)
         .onTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive, driverX, driverY, () -> Constants.lastValidTargetAngle))
-        .whileTrue(
-            new leftCoralReefTrack(vision));
-    
-                
+        .whileTrue(new leftCoralReefTrack(vision));
+
     // Note to self: removed negatives on x axis
 
     new JoystickButton(buttonBox, 1)
