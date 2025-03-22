@@ -15,6 +15,7 @@ package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -62,6 +63,9 @@ public class RobotContainer {
 
   private final CoralSubsystem m_coralSubSystem = new CoralSubsystem();
   private final AlgaeSubsystem m_algaeSubsystem = new AlgaeSubsystem();
+
+  private final Command m_algeaClearCommand =
+      m_coralSubSystem.setSetpointCommand(Setpoint.kAlgaeClear);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -124,23 +128,30 @@ public class RobotContainer {
 
     // Configure the button bindings
 
-    NamedCommands.registerCommand("Coral Outake", m_coralSubSystem.reverseIntakeCommand());
-    NamedCommands.registerCommand("Coral Intake", m_coralSubSystem.runIntakeCommand());
+    //   NamedCommands.registerCommand("Coral Outake", m_coralSubSystem.reverseIntakeCommand());
+    //   NamedCommands.registerCommand("Coral Intake", m_coralSubSystem.runIntakeCommand());
+
+    //   NamedCommands.registerCommand(
+    //       "Position Feeder Station",
+    // m_coralSubSystem.setSetpointCommand(Setpoint.kFeederStation));
+    // NamedCommands.registerCommand(
+    //     "Position Three", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel3));
 
     NamedCommands.registerCommand(
-        "Position Feeder Station", m_coralSubSystem.setSetpointCommand(Setpoint.kFeederStation));
-    NamedCommands.registerCommand(
-        "Position Three", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel3));
+        "Algae Clear", m_coralSubSystem.setSetpointCommand(Setpoint.kAlgaeClear));
 
     NamedCommands.registerCommand(
-        "Algae Clear",
-        m_coralSubSystem.setSetpointCommand(
-            Setpoint.kAlgaeClear)); // changed from level four, may change for Iowa
+        "Algae Clear Two", m_coralSubSystem.setSetpointCommand(Setpoint.kAlgaeClear2));
 
     NamedCommands.registerCommand(
-        "Position Two", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel2));
-    NamedCommands.registerCommand(
-        "Position Trough", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel1));
+        "Algae Knockout", m_coralSubSystem.setSetpointCommand(Setpoint.kAlgaeKnockout));
+
+    // NamedCommands.registerCommand(
+    //     "Position Two", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel2));
+    // //   NamedCommands.registerCommand(
+    //       "Position Trough", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel1));
+    //   NamedCommands.registerCommand(
+    //       "Algae Clear2", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel3));
 
     configureButtonBindings();
 
@@ -212,14 +223,14 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  Constants.lastValidTargetAngle = Rotation2d.fromDegrees(125);
+                  Constants.lastValidTargetAngle = Rotation2d.fromDegrees(155);
                 },
                 drive));
     new JoystickButton(buttonBox, 8)
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  Constants.lastValidTargetAngle = Rotation2d.fromDegrees(205);
+                  Constants.lastValidTargetAngle = Rotation2d.fromDegrees(335);
                 },
                 drive));
     new JoystickButton(buttonBox, 9)
@@ -227,6 +238,13 @@ public class RobotContainer {
             Commands.runOnce(
                 () -> {
                   Constants.lastValidTargetAngle = Rotation2d.fromDegrees(270);
+                },
+                drive));
+    new JoystickButton(buttonBox, 10)
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  Constants.lastValidTargetAngle = Rotation2d.fromDegrees(90);
                 },
                 drive));
 
@@ -237,31 +255,40 @@ public class RobotContainer {
 
     // Left Bumper -> Run tube intake
 
-    new JoystickButton(rightController, 1).whileTrue(m_coralSubSystem.runIntakeCommand());
-    new JoystickButton(rightController, 2)
-        .whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel2));
-    new JoystickButton(rightController, 3)
-        .whileTrue(
-            m_coralSubSystem
-                .setSetpointCommand(Setpoint.kLevel3)
-                .alongWith(m_algaeSubsystem.stowCommand()));
-    new JoystickButton(rightController, 5)
-        .whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kFeederStation));
-
+    // new JoystickButton(rightController, 1).whileTrue(m_coralSubSystem.runIntakeCommand());
     // new JoystickButton(rightController, 2)
-    // .whileTrue(
-    //     m_coralSubSystem.setSetpointCommand(
-    //         Setpoint.kAlgaeClear));
+    //     .whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel2));
+    // new JoystickButton(rightController, 3)
+    //     .whileTrue(
+    //         m_coralSubSystem
+    //             .setSetpointCommand(Setpoint.kLevel3)
+    //             .alongWith(m_algaeSubsystem.stowCommand()));*/
 
-    new JoystickButton(leftController, 2)
-        .whileTrue(
-            m_coralSubSystem.setSetpointCommand(
-                Setpoint.kAlgaeClear)); // used to be level four, may change for Iowa
+    // Right Joystick
 
-    new JoystickButton(leftController, 3)
+    new JoystickButton(rightController, 2)
+        .whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kAlgaeClear));
+
+    new JoystickButton(rightController, 3)
         .whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kAlgaeClear2));
 
-    new JoystickButton(leftController, 1).whileTrue(m_coralSubSystem.reverseIntakeCommand());
+    new JoystickButton(rightController, 4)
+        .whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kAlgaeKnockout));
+
+    new JoystickButton(rightController, 5)
+        .whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kArmStow));
+
+    new JoystickButton(rightController, 11)
+        .whileTrue(
+            Commands.runOnce(
+                    () ->
+                        drive.setPose(
+                            new Pose2d(drive.getPose().getTranslation(), new Rotation2d())),
+                    drive)
+                .ignoringDisable(true));
+
+    // Left Joystick
+    // new JoystickButton(leftController, 1).whileTrue(m_coralSubSystem.reverseIntakeCommand());
     new JoystickButton(leftController, 4).whileTrue(m_algaeSubsystem.reverseIntakeCommand());
     new JoystickButton(leftController, 5).whileTrue(m_algaeSubsystem.runIntakeCommand());
 

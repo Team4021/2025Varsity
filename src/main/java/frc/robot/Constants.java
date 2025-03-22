@@ -70,29 +70,30 @@ public final class Constants {
   public static final class CoralSubsystemConstants {
     public static final int kElevatorMotorCanId = 31;
     public static final int kArmMotorCanId = 34;
-    public static final int kIntakeMotorCanId = 35;
+    // public static final int kIntakeMotorCanId = 35;
 
     public static final class ElevatorSetpoints {
-      public static final int kFeederStation = 0;
+      // public static final int k = 0;
       public static final int kLevel1 = 0;
-      public static final int kLevel2 = 0;
-      public static final int kLevel3 = 100;
-      public static final int kLevel4 = 100;
+      public static final int kLevel2 = 100;
+      // public static final int kLevel3 = 100;
+      // public static final int kLevel4 = 100;
     }
 
     public static final class ArmSetpoints {
-      public static final double kFeederStation = -12.33;
-      public static final double kLevel1 = -45;
-      public static final double kLevel2 = -45;
-      public static final double kLevel3 = -45;
-      public static final double kLevel4 = -45;
-      public static final double kAlgaeClear = -30;
+      public static final double kArmStow = -20;
+      // public static final double kLevel1 = -45;
+      // public static final double kLevel2 = -45;
+      // public static final double kLevel3 = -45;
+      // public static final double kLevel4 = -45;
+      public static final double kAlgaeClear = -45;
+      public static final double kAlgaeKnockout = -30;
     }
 
-    public static final class IntakeSetpoints {
-      public static final double kForward = 0.5;
-      public static final double kReverse = -0.5;
-    }
+    // public static final class IntakeSetpoints {
+    //   public static final double kForward = 0.5;
+    //   public static final double kReverse = -0.5;
+    // }
   }
 
   public static final class AlgaeSubsystemConstants {
@@ -102,11 +103,11 @@ public final class Constants {
     public static final class ArmSetpoints {
       public static final double kStow = -4.178;
       public static final double kHold = -6.203;
-      public static final double kDown = -17.2;
+      public static final double kDown = -18;
     }
 
     public static final class IntakeSetpoints {
-      public static final double kForward = 0.5;
+      public static final double kForward = 0.75;
       public static final double kReverse = -0.5;
       public static final double kHold = 0.25;
     }

@@ -17,7 +17,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Position Three"
+                  "name": "Algae Clear Two"
                 }
               }
             ]
@@ -27,12 +27,6 @@
           "type": "wait",
           "data": {
             "waitTime": 2.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Coral Outake"
           }
         },
         {
@@ -40,36 +34,18 @@
           "data": {
             "commands": [
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Left Field+Coral Score"
+                  "name": "Algae Knockout"
                 }
               },
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Position Feeder Station"
+                  "pathName": "Left Field+Backaway"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Coral Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Left Field+Backaway"
           }
         }
       ]

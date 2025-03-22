@@ -5,15 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "wait",
           "data": {
-            "name": "Position Two"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Straight On Start + Algae Clear"
+            "waitTime": 4.5
           }
         },
         {
@@ -23,7 +17,13 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Straight On+Score"
+                  "pathName": "Straight On Start + Algae Clear"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Algae Clear"
                 }
               }
             ]
@@ -36,21 +36,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "Coral Outake"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Straight On+Backaway"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Algae Knockout"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Straight On+Backaway"
+                }
+              }
+            ]
           }
         }
       ]

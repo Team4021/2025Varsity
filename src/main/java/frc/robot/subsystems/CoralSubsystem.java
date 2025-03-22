@@ -9,7 +9,6 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
@@ -25,19 +24,20 @@ import frc.robot.Configs;
 import frc.robot.Constants.CoralSubsystemConstants;
 import frc.robot.Constants.CoralSubsystemConstants.ArmSetpoints;
 import frc.robot.Constants.CoralSubsystemConstants.ElevatorSetpoints;
-import frc.robot.Constants.CoralSubsystemConstants.IntakeSetpoints;
+// import frc.robot.Constants.CoralSubsystemConstants.IntakeSetpoints;
 import frc.robot.Constants.SimulationRobotConstants;
 
 public class CoralSubsystem extends SubsystemBase {
   /** Subsystem-wide setpoints */
   public enum Setpoint {
-    kFeederStation,
-    kLevel1,
-    kLevel2,
-    kLevel3,
-    kLevel4,
+    kArmStow,
+    // kLevel1,
+    // kLevel2,
+    // kLevel3,
+    // kLevel4,
     kAlgaeClear,
-    kAlgaeClear2;
+    kAlgaeClear2,
+    kAlgaeKnockout;
   }
 
   // Initialize arm SPARK. We will use MAXMotion position control for the arm, so we also need to
@@ -57,14 +57,14 @@ public class CoralSubsystem extends SubsystemBase {
 
   // Initialize intake SPARK. We will use open loop control for this so we don't need a closed loop
   // controller like above.
-  private SparkMax intakeMotor =
-      new SparkMax(CoralSubsystemConstants.kIntakeMotorCanId, MotorType.kBrushless);
+  // private SparkMax intakeMotor =
+  //     new SparkMax(CoralSubsystemConstants.kIntakeMotorCanId, MotorType.kBrushless);
 
   // Member variables for subsystem state management
   private boolean wasResetByButton = false;
   private boolean wasResetByLimit = false;
-  private double armCurrentTarget = ArmSetpoints.kFeederStation;
-  private double elevatorCurrentTarget = ElevatorSetpoints.kFeederStation;
+  private double armCurrentTarget = ArmSetpoints.kAlgaeClear;
+  private double elevatorCurrentTarget = ElevatorSetpoints.kLevel1;
 
   // Simulation setup and variables
   private DCMotor elevatorMotorModel = DCMotor.getNeoVortex(1);
@@ -135,10 +135,10 @@ public class CoralSubsystem extends SubsystemBase {
         Configs.CoralSubsystem.elevatorConfig,
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
-    intakeMotor.configure(
-        Configs.CoralSubsystem.intakeConfig,
-        ResetMode.kResetSafeParameters,
-        PersistMode.kPersistParameters);
+    // intakeMotor.configure(
+    //     Configs.CoralSubsystem.intakeConfig,
+    //     ResetMode.kResetSafeParameters,
+    //     PersistMode.kPersistParameters);
 
     // Display mechanism2d
     SmartDashboard.putData("Coral Subsystem", m_mech2d);
@@ -190,9 +190,9 @@ public class CoralSubsystem extends SubsystemBase {
   }
 
   /** Set the intake motor power in the range of [-1, 1]. */
-  private void setIntakePower(double power) {
-    intakeMotor.set(power);
-  }
+  // private void setIntakePower(double power) {
+  //   intakeMotor.set(power);
+  // }
 
   /**
    * Command to set the subsystem setpoint. This will set the arm and elevator to their predefined
@@ -202,35 +202,38 @@ public class CoralSubsystem extends SubsystemBase {
     return this.runOnce(
         () -> {
           switch (setpoint) {
-            case kFeederStation:
-              armCurrentTarget = ArmSetpoints.kFeederStation;
-              elevatorCurrentTarget = ElevatorSetpoints.kFeederStation;
-              break;
-            case kLevel1:
-              armCurrentTarget = ArmSetpoints.kLevel1;
+            case kArmStow:
+              armCurrentTarget = ArmSetpoints.kArmStow;
               elevatorCurrentTarget = ElevatorSetpoints.kLevel1;
               break;
-            case kLevel2:
-              armCurrentTarget = ArmSetpoints.kLevel2;
-              elevatorCurrentTarget = ElevatorSetpoints.kLevel2;
-              break;
-            case kLevel3:
-              armCurrentTarget = ArmSetpoints.kLevel3;
-              elevatorCurrentTarget = ElevatorSetpoints.kLevel3;
-              break;
-            case kLevel4:
-              armCurrentTarget = ArmSetpoints.kLevel4;
-              elevatorCurrentTarget = ElevatorSetpoints.kLevel4;
-              break;
+              // case kLevel1:
+              //   armCurrentTarget = ArmSetpoints.kLevel1;
+              //   elevatorCurrentTarget = ElevatorSetpoints.kLevel1;
+              //   break;
+              // case kLevel2:
+              //   armCurrentTarget = ArmSetpoints.kLevel2;
+              //   elevatorCurrentTarget = ElevatorSetpoints.kLevel2;
+              //   break;
+              // case kLevel3:
+              //   armCurrentTarget = ArmSetpoints.kLevel3;
+              //   elevatorCurrentTarget = ElevatorSetpoints.kLevel3;
+              //   break;
+              // case kLevel4:
+              //   armCurrentTarget = ArmSetpoints.kLevel4;
+              //   elevatorCurrentTarget = ElevatorSetpoints.kLevel4;
+              //   break;
 
             case kAlgaeClear:
               armCurrentTarget = ArmSetpoints.kAlgaeClear;
-              elevatorCurrentTarget = ElevatorSetpoints.kLevel2;
+              elevatorCurrentTarget = ElevatorSetpoints.kLevel1;
               break;
 
             case kAlgaeClear2:
               armCurrentTarget = ArmSetpoints.kAlgaeClear;
-              elevatorCurrentTarget = ElevatorSetpoints.kLevel3;
+              elevatorCurrentTarget = ElevatorSetpoints.kLevel2;
+              break;
+            case kAlgaeKnockout:
+              armCurrentTarget = ArmSetpoints.kAlgaeKnockout;
               break;
           }
         });
@@ -240,19 +243,19 @@ public class CoralSubsystem extends SubsystemBase {
    * Command to run the intake motor. When the command is interrupted, e.g. the button is released,
    * the motor will stop.
    */
-  public Command runIntakeCommand() {
-    return this.startEnd(
-        () -> this.setIntakePower(IntakeSetpoints.kForward), () -> this.setIntakePower(0.0));
-  }
+  // public Command runIntakeCommand() {
+  //   return this.startEnd(
+  //       () -> this.setIntakePower(IntakeSetpoints.kForward), () -> this.setIntakePower(0.0));
+  // }
 
   /**
    * Command to reverses the intake motor. When the command is interrupted, e.g. the button is
    * released, the motor will stop.
    */
-  public Command reverseIntakeCommand() {
-    return this.startEnd(
-        () -> this.setIntakePower(IntakeSetpoints.kReverse), () -> this.setIntakePower(0.0));
-  }
+  // public Command reverseIntakeCommand() {
+  //   return this.startEnd(
+  //       () -> this.setIntakePower(IntakeSetpoints.kReverse), () -> this.setIntakePower(0.0));
+  // }
 
   @Override
   public void periodic() {
@@ -265,7 +268,7 @@ public class CoralSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Coral/Arm/Actual Position", armEncoder.getPosition());
     SmartDashboard.putNumber("Coral/Elevator/Target Position", elevatorCurrentTarget);
     SmartDashboard.putNumber("Coral/Elevator/Actual Position", elevatorEncoder.getPosition());
-    SmartDashboard.putNumber("Coral/Intake/Applied Output", intakeMotor.getAppliedOutput());
+    // SmartDashboard.putNumber("Coral/Intake/Applied Output", intakeMotor.getAppliedOutput());
 
     // Update mechanism2d
     m_elevatorMech2d.setLength(
