@@ -13,6 +13,9 @@
 
 package frc.robot;
 
+import static frc.robot.subsystems.vision.VisionConstants.cameraFront;
+import static frc.robot.subsystems.vision.VisionConstants.cameraRear;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -35,6 +38,9 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOSpark;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOLimelight;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -49,6 +55,7 @@ public class RobotContainer {
   // Subsystems
 
   private final Drive drive;
+  private final Vision vision;
 
   // Controller
   public static final Joystick leftController = new Joystick(1);
@@ -63,9 +70,6 @@ public class RobotContainer {
 
   private final CoralSubsystem m_coralSubSystem = new CoralSubsystem();
   private final AlgaeSubsystem m_algaeSubsystem = new AlgaeSubsystem();
-
-  private final Command m_algeaClearCommand =
-      m_coralSubSystem.setSetpointCommand(Setpoint.kAlgaeClear);
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -82,6 +86,12 @@ public class RobotContainer {
                 new ModuleIOSpark(1),
                 new ModuleIOSpark(2),
                 new ModuleIOSpark(3));
+
+        vision =
+            new Vision(
+                drive::addVisionMeasurement,
+                new VisionIOLimelight(cameraFront, drive::getRotation),
+                new VisionIOLimelight(cameraRear, drive::getRotation));
         break;
 
       case SIM:
@@ -93,6 +103,8 @@ public class RobotContainer {
                 new ModuleIOSim(),
                 new ModuleIOSim(),
                 new ModuleIOSim());
+
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         break;
 
       default:
@@ -104,6 +116,8 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
+
+        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         break;
     }
 
@@ -126,17 +140,6 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
-    // Configure the button bindings
-
-    //   NamedCommands.registerCommand("Coral Outake", m_coralSubSystem.reverseIntakeCommand());
-    //   NamedCommands.registerCommand("Coral Intake", m_coralSubSystem.runIntakeCommand());
-
-    //   NamedCommands.registerCommand(
-    //       "Position Feeder Station",
-    // m_coralSubSystem.setSetpointCommand(Setpoint.kFeederStation));
-    // NamedCommands.registerCommand(
-    //     "Position Three", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel3));
-
     NamedCommands.registerCommand(
         "Algae Clear", m_coralSubSystem.setSetpointCommand(Setpoint.kAlgaeClear));
 
@@ -145,13 +148,6 @@ public class RobotContainer {
 
     NamedCommands.registerCommand(
         "Algae Knockout", m_coralSubSystem.setSetpointCommand(Setpoint.kAlgaeKnockout));
-
-    // NamedCommands.registerCommand(
-    //     "Position Two", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel2));
-    // //   NamedCommands.registerCommand(
-    //       "Position Trough", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel1));
-    //   NamedCommands.registerCommand(
-    //       "Algae Clear2", m_coralSubSystem.setSetpointCommand(Setpoint.kLevel3));
 
     configureButtonBindings();
 
@@ -189,8 +185,7 @@ public class RobotContainer {
                   Constants.lastValidTargetAngle = Rotation2d.fromDegrees(300);
                 },
                 drive));
-    // DriveCommands.joystickDriveAtAngle(
-    //     drive, driverX, driverY, () -> Rotation2d.fromDegrees(300)));
+
     new JoystickButton(buttonBox, 3)
         .onTrue(
             Commands.runOnce(
@@ -198,6 +193,7 @@ public class RobotContainer {
                   Constants.lastValidTargetAngle = Rotation2d.fromDegrees(240);
                 },
                 drive));
+
     new JoystickButton(buttonBox, 4)
         .onTrue(
             Commands.runOnce(
@@ -205,6 +201,7 @@ public class RobotContainer {
                   Constants.lastValidTargetAngle = Rotation2d.fromDegrees(180);
                 },
                 drive));
+
     new JoystickButton(buttonBox, 5)
         .onTrue(
             Commands.runOnce(
@@ -212,6 +209,7 @@ public class RobotContainer {
                   Constants.lastValidTargetAngle = Rotation2d.fromDegrees(120);
                 },
                 drive));
+
     new JoystickButton(buttonBox, 6)
         .onTrue(
             Commands.runOnce(
@@ -219,6 +217,7 @@ public class RobotContainer {
                   Constants.lastValidTargetAngle = Rotation2d.fromDegrees(60);
                 },
                 drive));
+
     new JoystickButton(buttonBox, 7)
         .onTrue(
             Commands.runOnce(
@@ -226,6 +225,7 @@ public class RobotContainer {
                   Constants.lastValidTargetAngle = Rotation2d.fromDegrees(155);
                 },
                 drive));
+
     new JoystickButton(buttonBox, 8)
         .onTrue(
             Commands.runOnce(
@@ -233,6 +233,7 @@ public class RobotContainer {
                   Constants.lastValidTargetAngle = Rotation2d.fromDegrees(335);
                 },
                 drive));
+
     new JoystickButton(buttonBox, 9)
         .onTrue(
             Commands.runOnce(
@@ -240,6 +241,7 @@ public class RobotContainer {
                   Constants.lastValidTargetAngle = Rotation2d.fromDegrees(270);
                 },
                 drive));
+
     new JoystickButton(buttonBox, 10)
         .onTrue(
             Commands.runOnce(
@@ -247,24 +249,6 @@ public class RobotContainer {
                   Constants.lastValidTargetAngle = Rotation2d.fromDegrees(90);
                 },
                 drive));
-
-    // Switch to X pattern when X button is pressed
-    // controlle.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-
-    // Left Stick Button -> Set swerve to X
-
-    // Left Bumper -> Run tube intake
-
-    // new JoystickButton(rightController, 1).whileTrue(m_coralSubSystem.runIntakeCommand());
-    // new JoystickButton(rightController, 2)
-    //     .whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kLevel2));
-    // new JoystickButton(rightController, 3)
-    //     .whileTrue(
-    //         m_coralSubSystem
-    //             .setSetpointCommand(Setpoint.kLevel3)
-    //             .alongWith(m_algaeSubsystem.stowCommand()));*/
-
-    // Right Joystick
 
     new JoystickButton(rightController, 2)
         .whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kAlgaeClear));
@@ -278,7 +262,15 @@ public class RobotContainer {
     new JoystickButton(rightController, 5)
         .whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kArmStow));
 
-    new JoystickButton(rightController, 11)
+    new JoystickButton(rightController, 7)
+        .whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kClimbAlign));
+    new JoystickButton(rightController, 7).whileTrue(m_algaeSubsystem.climbAlignCommand());
+
+    new JoystickButton(rightController, 6)
+        .whileTrue(m_coralSubSystem.setSetpointCommand(Setpoint.kClimb));
+    new JoystickButton(rightController, 6).whileTrue(m_algaeSubsystem.climbCommand());
+
+    new JoystickButton(rightController, 11) // Resets Odometry and sets gyro heading to 0
         .whileTrue(
             Commands.runOnce(
                     () ->
@@ -287,25 +279,8 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    // Left Joystick
-    // new JoystickButton(leftController, 1).whileTrue(m_coralSubSystem.reverseIntakeCommand());
     new JoystickButton(leftController, 4).whileTrue(m_algaeSubsystem.reverseIntakeCommand());
     new JoystickButton(leftController, 5).whileTrue(m_algaeSubsystem.runIntakeCommand());
-
-    // if (leftController.getRawButton(4)) { // 4 = ?
-    //     // Move the motor forward when the button is pressed
-    //     m_algaeSubsystem.set( -0.3); // Adjust the speed (0.0 to 1.0) as needed
-    // } else {
-    //     // Stop the motor when the button is released
-    //     m_algaeSubsystem.set( 0.0);
-    // }
-    // if (leftController.getRawButton(6)) { // 6 = ?
-    //     // Move the motor forward when the button is pressed
-    //     m_algaeSubsystem.set( 0.3); // Adjust the speed (0.0 to 1.0) as needed
-    // } else {
-    //     // Stop the motor when the button is released
-    //     m_algaeSubsystem.set( 0.0);
-
   }
 
   private Rotation2d getTargetAngleFromJoystick() {

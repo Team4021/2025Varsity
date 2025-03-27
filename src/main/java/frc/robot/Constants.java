@@ -46,54 +46,23 @@ public final class Constants {
   public static final Joystick leftController = new Joystick(1);
   public static final Joystick rightController = new Joystick(0);
   public static final Joystick buttonBox = new Joystick(2);
-  // Top of reef (from alliance wall)
-  public static final boolean one = buttonBox.getRawButton(1);
-  // top right side
-  public static final boolean two = buttonBox.getRawButton(2);
-  // bottom right side
-  public static final boolean three = buttonBox.getRawButton(3);
-  // bottom of reef (from alliance wall)
-  public static final boolean four = buttonBox.getRawButton(4);
-  // bottom left
-  public static final boolean five = buttonBox.getRawButton(5);
-  // top left
-  public static final boolean six = buttonBox.getRawButton(6);
-  // left feed station (from alliance wall)
-  public static final boolean seven = buttonBox.getRawButton(7);
-  // right feed station (from alliance wall)
-  public static final boolean eight = buttonBox.getRawButton(8);
-  // processor
-  public static final boolean nine = buttonBox.getRawButton(9);
-
-  // added down
 
   public static final class CoralSubsystemConstants {
     public static final int kElevatorMotorCanId = 31;
     public static final int kArmMotorCanId = 34;
-    // public static final int kIntakeMotorCanId = 35;
 
     public static final class ElevatorSetpoints {
-      // public static final int k = 0;
       public static final int kLevel1 = 0;
       public static final int kLevel2 = 100;
-      // public static final int kLevel3 = 100;
-      // public static final int kLevel4 = 100;
+      public static final int kClimbAlign = 30;
+      public static final int kClimb = 20;
     }
 
     public static final class ArmSetpoints {
       public static final double kArmStow = -20;
-      // public static final double kLevel1 = -45;
-      // public static final double kLevel2 = -45;
-      // public static final double kLevel3 = -45;
-      // public static final double kLevel4 = -45;
       public static final double kAlgaeClear = -45;
       public static final double kAlgaeKnockout = -30;
     }
-
-    // public static final class IntakeSetpoints {
-    //   public static final double kForward = 0.5;
-    //   public static final double kReverse = -0.5;
-    // }
   }
 
   public static final class AlgaeSubsystemConstants {
@@ -104,12 +73,15 @@ public final class Constants {
       public static final double kStow = -4.178;
       public static final double kHold = -6.203;
       public static final double kDown = -18;
+      public static final double kClimbAlign = -16;
+      public static final double kClimb = -10;
     }
 
     public static final class IntakeSetpoints {
       public static final double kForward = 0.75;
       public static final double kReverse = -0.5;
       public static final double kHold = 0.25;
+      public static final double kOff = 0.0;
     }
   }
 

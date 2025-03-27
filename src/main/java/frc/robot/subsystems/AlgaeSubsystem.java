@@ -140,6 +140,22 @@ public class AlgaeSubsystem extends SubsystemBase {
         });
   }
 
+  public Command climbAlignCommand() {
+    return this.run(
+        () -> {
+          stowWhenIdle = false;
+          setIntakePosition(AlgaeSubsystemConstants.ArmSetpoints.kClimbAlign);
+        });
+  }
+
+  public Command climbCommand() {
+    return this.run(
+        () -> {
+          stowWhenIdle = false;
+          setIntakePosition(AlgaeSubsystemConstants.ArmSetpoints.kClimb);
+        });
+  }
+
   /**
    * Command to run the algae intake in reverse. This will extend the arm to its "hold" position and
    * run the motor at its "reverse" power to eject the ball.

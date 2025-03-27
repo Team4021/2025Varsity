@@ -31,10 +31,8 @@ public class CoralSubsystem extends SubsystemBase {
   /** Subsystem-wide setpoints */
   public enum Setpoint {
     kArmStow,
-    // kLevel1,
-    // kLevel2,
-    // kLevel3,
-    // kLevel4,
+    kClimbAlign,
+    kClimb,
     kAlgaeClear,
     kAlgaeClear2,
     kAlgaeKnockout;
@@ -206,22 +204,6 @@ public class CoralSubsystem extends SubsystemBase {
               armCurrentTarget = ArmSetpoints.kArmStow;
               elevatorCurrentTarget = ElevatorSetpoints.kLevel1;
               break;
-              // case kLevel1:
-              //   armCurrentTarget = ArmSetpoints.kLevel1;
-              //   elevatorCurrentTarget = ElevatorSetpoints.kLevel1;
-              //   break;
-              // case kLevel2:
-              //   armCurrentTarget = ArmSetpoints.kLevel2;
-              //   elevatorCurrentTarget = ElevatorSetpoints.kLevel2;
-              //   break;
-              // case kLevel3:
-              //   armCurrentTarget = ArmSetpoints.kLevel3;
-              //   elevatorCurrentTarget = ElevatorSetpoints.kLevel3;
-              //   break;
-              // case kLevel4:
-              //   armCurrentTarget = ArmSetpoints.kLevel4;
-              //   elevatorCurrentTarget = ElevatorSetpoints.kLevel4;
-              //   break;
 
             case kAlgaeClear:
               armCurrentTarget = ArmSetpoints.kAlgaeClear;
@@ -232,8 +214,19 @@ public class CoralSubsystem extends SubsystemBase {
               armCurrentTarget = ArmSetpoints.kAlgaeClear;
               elevatorCurrentTarget = ElevatorSetpoints.kLevel2;
               break;
+
             case kAlgaeKnockout:
               armCurrentTarget = ArmSetpoints.kAlgaeKnockout;
+              break;
+
+            case kClimbAlign:
+              elevatorCurrentTarget = ElevatorSetpoints.kClimbAlign;
+              armCurrentTarget = ArmSetpoints.kAlgaeClear;
+              break;
+
+            case kClimb:
+              elevatorCurrentTarget = ElevatorSetpoints.kClimb;
+              armCurrentTarget = ArmSetpoints.kAlgaeClear;
               break;
           }
         });
