@@ -121,6 +121,15 @@ public class RobotContainer {
         break;
     }
 
+    NamedCommands.registerCommand(
+        "Algae Clear", m_coralSubSystem.setSetpointCommand(Setpoint.kAlgaeClear));
+
+    NamedCommands.registerCommand(
+        "Algae Clear Two", m_coralSubSystem.setSetpointCommand(Setpoint.kAlgaeClear2));
+
+    NamedCommands.registerCommand(
+        "Algae Knockout", m_coralSubSystem.setSetpointCommand(Setpoint.kAlgaeKnockout));
+
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
@@ -139,15 +148,6 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
-    NamedCommands.registerCommand(
-        "Algae Clear", m_coralSubSystem.setSetpointCommand(Setpoint.kAlgaeClear));
-
-    NamedCommands.registerCommand(
-        "Algae Clear Two", m_coralSubSystem.setSetpointCommand(Setpoint.kAlgaeClear2));
-
-    NamedCommands.registerCommand(
-        "Algae Knockout", m_coralSubSystem.setSetpointCommand(Setpoint.kAlgaeKnockout));
 
     configureButtonBindings();
 
