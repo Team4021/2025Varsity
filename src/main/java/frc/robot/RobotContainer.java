@@ -13,8 +13,8 @@
 
 package frc.robot;
 
-import static frc.robot.subsystems.vision.VisionConstants.cameraFront;
-import static frc.robot.subsystems.vision.VisionConstants.cameraRear;
+import static frc.robot.subsystems.vision.VisionConstants.camera0;
+import static frc.robot.subsystems.vision.VisionConstants.camera1;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -90,8 +90,8 @@ public class RobotContainer {
         vision =
             new Vision(
                 drive::addVisionMeasurement,
-                new VisionIOLimelight(cameraFront, drive::getRotation),
-                new VisionIOLimelight(cameraRear, drive::getRotation));
+                new VisionIOLimelight(camera1, drive::getRotation),
+                new VisionIOLimelight(camera0, drive::getRotation));
         break;
 
       case SIM:
@@ -120,7 +120,6 @@ public class RobotContainer {
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         break;
     }
-
     NamedCommands.registerCommand(
         "Algae Clear", m_coralSubSystem.setSetpointCommand(Setpoint.kAlgaeClear));
 
@@ -279,8 +278,8 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    new JoystickButton(leftController, 4).whileTrue(m_algaeSubsystem.reverseIntakeCommand());
-    new JoystickButton(leftController, 5).whileTrue(m_algaeSubsystem.runIntakeCommand());
+    new JoystickButton(leftController, 1).whileTrue(m_algaeSubsystem.reverseIntakeCommand());
+    new JoystickButton(rightController, 1).whileTrue(m_algaeSubsystem.runIntakeCommand());
   }
 
   private Rotation2d getTargetAngleFromJoystick() {

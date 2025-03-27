@@ -60,7 +60,7 @@ public final class Constants {
 
     public static final class ArmSetpoints {
       public static final double kArmStow = -20;
-      public static final double kAlgaeClear = -45;
+      public static final double kAlgaeClear = -40;
       public static final double kAlgaeKnockout = -30;
     }
   }

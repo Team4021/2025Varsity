@@ -143,11 +143,11 @@ public class DriveCommands {
                       omega);
               boolean isFlipped =
                   DriverStation.getAlliance().isPresent()
-                      && DriverStation.getAlliance().get() == Alliance.Blue;
+                      && DriverStation.getAlliance().get() == Alliance.Red;
               drive.runVelocity(
                   ChassisSpeeds.fromFieldRelativeSpeeds(
                       speeds,
-                      isFlipped
+                      false
                           ? drive.getRotation().plus(new Rotation2d(Math.PI))
                           : drive.getRotation()));
             },
