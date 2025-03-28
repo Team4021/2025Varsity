@@ -61,7 +61,7 @@ public class CoralSubsystem extends SubsystemBase {
   // Member variables for subsystem state management
   private boolean wasResetByButton = false;
   private boolean wasResetByLimit = false;
-  private double armCurrentTarget = ArmSetpoints.kAlgaeClear;
+  private double armCurrentTarget = ArmSetpoints.kArmStow;
   private double elevatorCurrentTarget = ElevatorSetpoints.kLevel1;
 
   // Simulation setup and variables

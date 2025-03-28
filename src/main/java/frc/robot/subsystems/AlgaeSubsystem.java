@@ -145,6 +145,7 @@ public class AlgaeSubsystem extends SubsystemBase {
         () -> {
           stowWhenIdle = false;
           setIntakePosition(AlgaeSubsystemConstants.ArmSetpoints.kClimbAlign);
+          setIntakePower(0.0);
         });
   }
 
@@ -153,6 +154,7 @@ public class AlgaeSubsystem extends SubsystemBase {
         () -> {
           stowWhenIdle = false;
           setIntakePosition(AlgaeSubsystemConstants.ArmSetpoints.kClimb);
+          setIntakePower(0.0);
         });
   }
 

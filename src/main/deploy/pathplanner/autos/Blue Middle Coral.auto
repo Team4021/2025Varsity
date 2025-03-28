@@ -5,15 +5,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "Algae Clear Two"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "test"
+            "pathName": "Blue Middle Coral"
           }
         }
       ]

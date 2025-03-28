@@ -25,13 +25,13 @@ public class VisionConstants {
 
   // Camera names, must match names configured on coprocessor
   public static String camera1 = "camera1";
-  public static String camera0 = "camera0";
+  public static String camr = "camr";
 
   // Robot to camera transforms
   // (Not used by Limelight, configure in web UI instead)
   public static Transform3d robotToCamera1 =
       new Transform3d(0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, 0.0));
-  public static Transform3d robotToCamera0 =
+  public static Transform3d robotTocamr =
       new Transform3d(-0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, Math.PI));
 
   // Basic filtering thresholds

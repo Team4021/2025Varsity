@@ -13,8 +13,8 @@
 
 package frc.robot;
 
-import static frc.robot.subsystems.vision.VisionConstants.camera0;
 import static frc.robot.subsystems.vision.VisionConstants.camera1;
+import static frc.robot.subsystems.vision.VisionConstants.camr;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -91,7 +91,7 @@ public class RobotContainer {
             new Vision(
                 drive::addVisionMeasurement,
                 new VisionIOLimelight(camera1, drive::getRotation),
-                new VisionIOLimelight(camera0, drive::getRotation));
+                new VisionIOLimelight(camr, drive::getRotation));
         break;
 
       case SIM:
